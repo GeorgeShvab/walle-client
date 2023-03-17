@@ -11,7 +11,7 @@ const lightThemeTokens = {
   background: {
     light: '#ffffff',
     main: '#ffffff',
-    dark: '#f9f9f9',
+    dark: '#fcfcfc',
     default: '#ffffff',
   },
 }
@@ -19,14 +19,15 @@ const lightThemeTokens = {
 const darkThemeTokens = {
   primary: {
     light: '#f2f2f2',
-    main: '#f8f8f8',
+    main: '#f2f2f2',
     dark: '#fafafa',
-    default: '#f8f8f8',
+    default: '#f2f2f2',
+    buttonDarkColor: '#ffffff',
   },
   background: {
     light: '#606060',
     main: '#121212',
-    dark: '#404040',
+    dark: '#121212',
     default: '#121212',
   },
 }

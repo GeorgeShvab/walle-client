@@ -14,11 +14,7 @@ const Index: FC = () => {
   const isLesserThamMd = useMediaQuery(breakpoints.down('md'))
 
   return (
-    <Box
-      component="main"
-      minHeight="100vh"
-      sx={{ backgroundColor: palette.background.default }}
-    >
+    <Box component="main" minHeight="100vh">
       <Wrapper>
         <Box className="container">
           <Header />
@@ -42,14 +38,16 @@ const Index: FC = () => {
                 формати. Має інтуїтивний та зручний дизайн і підійде будь-якому
                 користувачу.
               </Typography>
-              <Button variant="contained" size="large">
-                Реєстрація
-              </Button>
+              <Link to="/registration">
+                <Button variant="contained" size="large">
+                  Реєстрація
+                </Button>
+              </Link>
             </Box>
             <Box>
               <Typography color={palette.primary.light}>
-                Вже зареєстровані? <Link to="/registration">Увійти</Link> або{' '}
-                <Link to="/main">Меню</Link>
+                Вже зареєстровані? <Link to="/login">Увійти</Link> або{' '}
+                <Link to="/app">Меню</Link>
               </Typography>
               <Typography color={palette.primary.light}>
                 &copy;Георгій Шваб. Всі права збережено.
