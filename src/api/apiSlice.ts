@@ -7,7 +7,7 @@ import {
 import getLocalValue from '../utils/getLocalValue'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_APP_SERVER_API,
+  baseUrl: import.meta.env.VITE_APP_SERVER_ADDRESS,
   prepareHeaders: (headers) => {
     headers.set('authorization', getLocalValue('authorization'))
     return headers

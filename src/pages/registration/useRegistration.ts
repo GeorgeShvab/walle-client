@@ -10,8 +10,6 @@ import { setUser } from '../../redux/slices/user'
 import { useNavigate } from 'react-router-dom'
 
 const useRegistration = () => {
-  const dispatch = useAppDispatch()
-
   const navigate = useNavigate()
 
   const [register] = useRegistrationMutation()
@@ -35,11 +33,11 @@ const useRegistration = () => {
       try {
         const data = await register(args).unwrap()
 
-        dispatch(setUser(data))
         setError(undefined)
 
-        navigate('/app')
+        navigate('/registration/success')
       } catch (e: any) {
+        console.log(e)
         if (e.status === 400) {
           return (e as FailedResponse<ValidationError>).data.errors
         } else if (e.status === 500) {

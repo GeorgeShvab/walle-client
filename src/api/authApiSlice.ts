@@ -6,23 +6,30 @@ const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     googleAuth: builder.mutation<AuthResponse, string>({
       query: (token) => ({
-        url: import.meta.env.VITE_APP_SERVER_ADDRESS + '/auth/google',
+        url: '/auth/google',
         method: 'POST',
         body: { clientToken: token },
       }),
     }),
-    registration: builder.mutation<AuthResponse, RegistrationArgs>({
+    registration: builder.mutation<void, RegistrationArgs>({
       query: (body) => ({
-        url: import.meta.env.VITE_APP_SERVER_ADDRESS + '/auth/registration',
+        url: '/auth/registration',
         method: 'POST',
         body,
       }),
     }),
     login: builder.mutation<AuthResponse, LoginArgs>({
       query: (body) => ({
-        url: import.meta.env.VITE_APP_SERVER_ADDRESS + '/auth/login',
+        url: '/auth/login',
         method: 'POST',
         body,
+      }),
+    }),
+    verify: builder.mutation<AuthResponse, string>({
+      query: (token) => ({
+        url: '/auth/verify',
+        method: 'POST',
+        body: { verificationToken: token },
       }),
     }),
   }),
@@ -32,4 +39,5 @@ export const {
   useGoogleAuthMutation,
   useRegistrationMutation,
   useLoginMutation,
+  useVerifyMutation,
 } = authApiSlice

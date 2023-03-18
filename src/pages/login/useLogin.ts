@@ -34,7 +34,7 @@ const useLogin = () => {
         setError(undefined)
         dispatch(setUser(data))
 
-        navigate('/app')
+        navigate('/home')
       } catch (e: any) {
         if (e.status === 404) {
           return {

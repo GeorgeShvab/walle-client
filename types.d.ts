@@ -44,3 +44,5 @@ export interface AuthResponse {
   accessToken: string
   refreshToken: string
 }
+
+export type Page = 'home' | 'document' | 'login' | 'registration'
