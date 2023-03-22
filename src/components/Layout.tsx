@@ -7,6 +7,7 @@ const Layout: FC<{ children: ReactElement }> = ({ children }) => {
     <Box>
       <ToolBar />
       {children}
+      <Box height="calc(100vh - 42px)"></Box>
     </Box>
   )
 }

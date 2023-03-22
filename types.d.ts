@@ -45,4 +45,17 @@ export interface AuthResponse {
   refreshToken: string
 }
 
-export type Page = 'home' | 'document' | 'login' | 'registration'
+export type Page = 'home' | 'documents' | 'login' | 'registration'
+
+export type DocumentType = 'json' | 'txt' | 'xml'
+
+export interface Document {
+  id: string
+  title: string
+  text: string
+  type: DocumentType
+  owner: ObjectId
+  access: AccessLevel
+  createdAt: string
+  updatedAt: string
+}

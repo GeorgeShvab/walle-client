@@ -24,6 +24,14 @@ const Router: FC = () => {
           </Layout>
         }
       />
+      <Route
+        path="/documents/:id"
+        element={
+          <Layout>
+            <Home />
+          </Layout>
+        }
+      />
     </Routes>
   )
 }

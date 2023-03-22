@@ -27,9 +27,13 @@ const userSlice = createSlice({
       state.data = action.payload.user
       state.isLoading = false
     },
+    unauthorize: (state) => {
+      state.data = null
+      state.isLoading = true
+    },
   },
 })
 
 export default userSlice.reducer
 
-export const { setUser } = userSlice.actions
+export const { setUser, unauthorize } = userSlice.actions
