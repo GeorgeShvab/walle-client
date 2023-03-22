@@ -43,7 +43,7 @@ const Verification: FC = () => {
         sx={{
           padding: isLesserThamMd ? '35px 30px' : '35px 40px',
           width: '100%',
-          maxWidth: isLesserThamMd ? '300px' : '325px',
+          mmaxWidth: isLesserThamMd ? '100%' : '400px',
         }}
       >
         {success || error ? (

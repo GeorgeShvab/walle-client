@@ -11,7 +11,7 @@ import { useMediaQuery } from '@mui/material'
 const Index: FC = () => {
   const { palette, breakpoints } = useTheme()
 
-  const isLesserThamMd = useMediaQuery(breakpoints.down('md'))
+  const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
   return (
     <Box component="main" minHeight="100vh">
@@ -19,21 +19,24 @@ const Index: FC = () => {
         <Box className="container">
           <Header />
           <Box
-            padding={isLesserThamMd ? '75px 0 50px 0' : '100px 0 50px 0'}
-            maxWidth={isLesserThamMd ? 'unset' : '500px'}
+            padding={isLesserThanMd ? '75px 0 50px 0' : '100px 0 50px 0'}
+            maxWidth={isLesserThanMd ? 'unset' : '500px'}
             display="flex"
             flexDirection="column"
             gap="50px"
             minHeight={
-              isLesserThamMd ? ' calc(100vh - 197px)' : 'calc(100vh - 222px)'
+              isLesserThanMd ? ' calc(100vh - 100px)' : 'calc(100vh - 100px)'
             }
-            textAlign={isLesserThamMd ? 'center' : 'left'}
+            textAlign={isLesserThanMd ? 'center' : 'left'}
           >
             <Box flex="3 0 auto">
               <Typography variant="h1" fontWeight="800" mb="40px">
                 Швидкий та зручний веб редактор для текстових файлів
               </Typography>
-              <Typography color={palette.primary.light} mb="50px">
+              <Typography
+                color={palette.primary.light}
+                mb={isLesserThanMd ? '75px' : '50px'}
+              >
                 Додаток повністю безкоштовний, підтримує txt, json та xml
                 формати. Має інтуїтивний та зручний дизайн і підійде будь-якому
                 користувачу.

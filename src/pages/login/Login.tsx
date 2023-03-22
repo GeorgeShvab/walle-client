@@ -63,7 +63,7 @@ const Login: FC = () => {
         sx={{
           padding: isLesserThamMd ? '35px 30px' : '35px 40px',
           width: '100%',
-          maxWidth: isLesserThamMd ? '300px' : '325px',
+          maxWidth: isLesserThamMd ? '100%' : '400px',
         }}
       >
         <Alert open={Boolean(error)} text={error} />
