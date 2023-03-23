@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import useTheme from '@mui/material/styles/useTheme'
 import { FC } from 'react'
 
-const DocumentPrettyCorners: FC<{ selected: boolean }> = ({ selected }) => {
+const TabCorners: FC<{ selected: boolean }> = ({ selected }) => {
   const { palette } = useTheme()
 
   return (
@@ -54,4 +54,4 @@ const DocumentPrettyCorners: FC<{ selected: boolean }> = ({ selected }) => {
   )
 }
 
-export default DocumentPrettyCorners
+export default TabCorners

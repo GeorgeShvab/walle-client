@@ -2,13 +2,11 @@ import Box from '@mui/material/Box'
 import { FC } from 'react'
 import ToolBarLeftActions from './ToolBarLeftActions'
 import ToolBarRightActions from './ToolBarRightActions'
-import Documents from './Documents'
+import Tabs from './Tabs'
 import useTheme from '@mui/material/styles/useTheme'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import useMediaQuery from '@mui/material/useMediaQuery'
-
-import MenuIcon from '@mui/icons-material/Menu'
+import MenuBtn from './MenuBtn'
 
 const ToolBar: FC = () => {
   const { breakpoints } = useTheme()
@@ -29,11 +27,7 @@ const ToolBar: FC = () => {
           gap={isLesserThanMd ? '4px' : '25px'}
           pl="10px"
         >
-          {isLesserThanMd && (
-            <IconButton>
-              <MenuIcon />
-            </IconButton>
-          )}
+          <MenuBtn />
           <Typography
             variant={isLesserThanMd ? 'h5' : 'h6'}
             fontWeight="800"
@@ -46,7 +40,7 @@ const ToolBar: FC = () => {
         </Box>
         {!isLesserThanMd && (
           <Box flex="3 3 auto" overflow="hidden">
-            <Documents />
+            <Tabs />
           </Box>
         )}
         <Box flex={isLesserThanMd ? '0 0 auto' : '0 0 auto'}>

@@ -3,10 +3,9 @@ import { FC, MouseEvent } from 'react'
 import * as types from '../../../types'
 import Typography from '@mui/material/Typography'
 import useTheme from '@mui/material/styles/useTheme'
-import DocumentIcon from './DocumentIcon'
+import TabIcon from './TabIcon'
 import CloseIcon from '@mui/icons-material/Close'
-import { IconButton } from '@mui/material'
-import DocumentPrettyCorners from './DocumentPrettyCorners'
+import IconButton from '@mui/material/IconButton'
 
 type PropsType = types.Document & {
   selected?: boolean
@@ -14,7 +13,7 @@ type PropsType = types.Document & {
   onClose?: (document: types.Document) => void
 }
 
-const Document: FC<PropsType> = (props) => {
+const HorizontalTab: FC<PropsType> = (props) => {
   const { onClick, onClose, selected, ...document } = props
 
   const { palette } = useTheme()
@@ -44,7 +43,7 @@ const Document: FC<PropsType> = (props) => {
           content: `''`,
           position: 'absolute',
           backgroundColor:
-            palette.mode === 'light' ? palette.grey[400] : palette.primary.dark,
+            palette.mode === 'light' ? palette.grey[400] : palette.grey[800],
           display: 'block',
           right: '0',
           width: '1px',
@@ -77,7 +76,7 @@ const Document: FC<PropsType> = (props) => {
         },
       }}
     >
-      <DocumentIcon type={document.type} sx={{ marginRight: '10px' }} />
+      <TabIcon type={document.type} sx={{ marginRight: '10px' }} />
       <Typography
         variant="h6"
         fontSize="small"
@@ -126,9 +125,51 @@ const Document: FC<PropsType> = (props) => {
           }}
         />
       </IconButton>
-      <DocumentPrettyCorners selected={Boolean(selected)} />
+      <Box
+        sx={{
+          width: '5px',
+          height: '100%',
+          position: 'absolute',
+          left: '-5px',
+          opacity: selected ? '1' : '0',
+          backgroundColor: palette.background.default,
+          '&::before': {
+            content: `""`,
+            display: 'block',
+            backgroundColor:
+              palette.mode === 'light'
+                ? palette.grey[50]
+                : palette.background.light,
+            width: '5px',
+            height: '100%',
+            borderRadius: '0 0 5px 0',
+          },
+        }}
+      />
+      <Box
+        sx={{
+          width: '5px',
+          height: '100%',
+          position: 'absolute',
+          right: '-5px',
+          opacity: selected ? '1' : '0',
+          zIndex: selected ? '5' : '1',
+          backgroundColor: palette.background.default,
+          '&::before': {
+            content: `""`,
+            display: 'block',
+            backgroundColor:
+              palette.mode === 'light'
+                ? palette.grey[50]
+                : palette.background.light,
+            width: '5px',
+            height: '100%',
+            borderRadius: '0 0 0 5px',
+          },
+        }}
+      />
     </Box>
   )
 }
 
-export default Document
+export default HorizontalTab

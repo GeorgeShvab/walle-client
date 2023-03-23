@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import { FC, useEffect, useRef } from 'react'
 import { useGetDocumentsQuery } from '../../api/documentApiSlice'
-import Document from './Document'
 import useTheme from '@mui/material/styles/useTheme'
 import usePage from '../../hooks/usePage'
 import * as types from '../../../types'
@@ -11,8 +10,9 @@ import 'react-indiana-drag-scroll/dist/style.css'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { selectOpened, close } from '../../redux/slices/opened'
 import AddButton from './AddButton'
+import Tab from '../Tab/HorizontalTab'
 
-const Documents: FC = () => {
+const Tabs: FC = () => {
   const dispatch = useAppDispatch()
 
   const { palette } = useTheme()
@@ -75,7 +75,7 @@ const Documents: FC = () => {
           sx={{ cursor: 'default' }}
         >
           {data?.map((item) => (
-            <Document
+            <Tab
               key={item.id}
               onClick={selectDocument}
               onClose={closeDocument}
@@ -90,4 +90,4 @@ const Documents: FC = () => {
   )
 }
 
-export default Documents
+export default Tabs
