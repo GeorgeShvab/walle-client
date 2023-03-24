@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import { FC, ReactElement } from 'react'
 import imageLightMode from '../../assets/intro_light.png'
-import imageDarkMode from '../../assets/intro_dark2.png'
+import imageDarkMode from '../../assets/intro_dark.png'
 import useTheme from '@mui/material/styles/useTheme'
 import { useMediaQuery } from '@mui/material'
 
