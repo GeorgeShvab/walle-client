@@ -12,46 +12,22 @@ const useLogin = () => {
 
   const [login] = useLoginMutation()
 
-  const [error, setError] = useState<string>()
+  return async (args: LoginArgs) => {
+    try {
+      const data = await login(args).unwrap()
 
-  const [time, setTime] = useState<number>()
+      dispatch(setUser(data))
 
-  // Function to clear error after some time
-  const clearTime = () => {
-    clearTimeout(time)
-    setTime(
-      setTimeout(() => {
-        setError(undefined)
-      }, 5000)
-    )
-  }
-
-  return [
-    async (args: LoginArgs) => {
-      try {
-        const data = await login(args).unwrap()
-
-        setError(undefined)
-        dispatch(setUser(data))
-
-        navigate('/home')
-      } catch (e: any) {
-        if (e.status === 404) {
-          return {
-            email: 'Невірний емейл або пароль',
-            password: 'Невірний емейл або пароль',
-          }
-        } else if (e.status === 500) {
-          clearTime()
-          setError('Помилка серверу')
-        } else {
-          clearTime()
-          setError("Помилка з'єднання")
+      navigate('/home')
+    } catch (e: any) {
+      if (e.status === 404) {
+        return {
+          email: 'Невірний емейл або пароль',
+          password: 'Невірний емейл або пароль',
         }
       }
-    },
-    error,
-  ] as const
+    }
+  }
 }
 
 export default useLogin

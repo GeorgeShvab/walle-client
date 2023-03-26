@@ -5,6 +5,7 @@ import setLocalValue from '../utils/setLocalBalue'
 import { setUser } from '../redux/slices/user'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { showAlert } from '../redux/slices/alert'
 
 type SuccessResponse = Omit<
   TokenResponse,
@@ -21,48 +22,28 @@ const useGoogleAuthorization = () => {
 
   const navigate = useNavigate()
 
-  const [error, setError] = useState<string>()
-
   const [googleAuth] = useGoogleAuthMutation()
-
-  const [time, setTime] = useState<number>()
-
-  // Function to clear error after some time
-  const clearTime = () => {
-    clearTimeout(time)
-    setTime(
-      setTimeout(() => {
-        setError(undefined)
-      }, 5000)
-    )
-  }
 
   const onSuccess = async (response: SuccessResponse) => {
     try {
       const data = await googleAuth(response.access_token).unwrap()
 
-      setError(undefined)
       dispatch(setUser(data))
 
       navigate('/home')
     } catch (e) {
-      clearTime()
-      setError('Помилка авторизації')
+      dispatch(showAlert('Помилка авторизації'))
     }
   }
 
   const onError = (response: ErrorResponse) => {
-    clearTime()
-    setError('Помилка авторизації')
+    dispatch(showAlert('Помилка авторизації'))
   }
 
-  return [
-    useGoogleLogin({
-      onSuccess,
-      onError,
-    }),
-    error,
-  ] as const
+  return useGoogleLogin({
+    onSuccess,
+    onError,
+  })
 }
 
 export default useGoogleAuthorization

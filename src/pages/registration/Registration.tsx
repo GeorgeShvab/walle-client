@@ -41,24 +41,11 @@ const initialValues = {
 const Registration: FC = () => {
   const { breakpoints } = useTheme()
 
-  const [googleAuth, googleAuthServerError] = useGoogleAuthorization()
+  const googleAuth = useGoogleAuthorization()
 
-  const [register, registrationServerError] = useRegistration()
-
-  const error = googleAuthServerError || registrationServerError
+  const handleSubmit = useRegistration()
 
   const isLesserThamMd = useMediaQuery(breakpoints.down('md'))
-
-  const handleSubmit = async (
-    values: RegistrationArgs,
-    actions: FormikHelpers<RegistrationArgs>
-  ) => {
-    const data = await register(values)
-
-    if (data) {
-      actions.setErrors(data)
-    }
-  }
 
   return (
     <CenterContentPageWrapper>
@@ -70,8 +57,6 @@ const Registration: FC = () => {
           maxWidth: isLesserThamMd ? '100%' : '400px',
         }}
       >
-        <Alert open={Boolean(error)} text={error} />
-
         <Formik
           onSubmit={handleSubmit}
           initialValues={initialValues}

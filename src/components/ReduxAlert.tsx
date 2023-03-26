@@ -1,27 +1,27 @@
 import { useEffect, useState } from 'react'
-import { hideError, selectError } from '../redux/slices/error'
+import { hideAlert, selectAlert } from '../redux/slices/alert'
 import { useAppDispatch, useAppSelector } from '../redux/store'
 import Alert from './Alert'
 
-const ErrorAlert = () => {
+const ReduxAlert = () => {
   const dispatch = useAppDispatch()
 
-  const error = useAppSelector(selectError)
+  const alert = useAppSelector(selectAlert)
 
   const [time, setTime] = useState<number>()
 
   useEffect(() => {
-    if (error.state) {
+    if (alert.state) {
       clearTimeout(time)
       setTime(
         setTimeout(() => {
-          dispatch(hideError())
+          dispatch(hideAlert())
         }, 7500)
       )
     }
-  }, [error])
+  }, [alert])
 
-  return <Alert open={error.state} text={error.text} type="error" />
+  return <Alert open={alert.state} text={alert.text} type={alert.type} />
 }
 
-export default ErrorAlert
+export default ReduxAlert

@@ -15,7 +15,6 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { LoginArgs } from '../../../types'
 import GoogleIcon from '@mui/icons-material/Google'
 import useLogin from './useLogin'
-import Alert from '../../components/Alert'
 import CenterContentPageWrapper from '../../components/CenterContentPageWrapper'
 
 const validationSchema = yup.object().shape({
@@ -38,11 +37,9 @@ const initialValues = {
 const Login: FC = () => {
   const { breakpoints } = useTheme()
 
-  const [googleAuth, googleAuthServerError] = useGoogleAuthorization()
+  const googleAuth = useGoogleAuthorization()
 
-  const [login, loginServerError] = useLogin()
-
-  const error = googleAuthServerError || loginServerError
+  const login = useLogin()
 
   const isLesserThamMd = useMediaQuery(breakpoints.down('md'))
 
@@ -66,8 +63,6 @@ const Login: FC = () => {
           maxWidth: isLesserThamMd ? '100%' : '400px',
         }}
       >
-        <Alert open={Boolean(error)} text={error} />
-
         <Formik
           onSubmit={handleSubmit}
           initialValues={initialValues}

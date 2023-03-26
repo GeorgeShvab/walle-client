@@ -14,7 +14,7 @@ import {
 } from 'redux-persist'
 import opened from './slices/opened'
 import settings from './slices/settings'
-import error from './slices/error'
+import alert from './slices/alert'
 
 const persistConfig = {
   key: 'root',
@@ -28,7 +28,7 @@ const persistedReducer = persistReducer(
     user,
     opened,
     settings,
-    error,
+    alert,
   })
 )
 

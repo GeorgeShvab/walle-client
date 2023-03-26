@@ -8,48 +8,27 @@ import {
 } from '../../../types'
 import { setUser } from '../../redux/slices/user'
 import { useNavigate } from 'react-router-dom'
+import { FormikHelpers } from 'formik'
 
 const useRegistration = () => {
   const navigate = useNavigate()
 
   const [register] = useRegistrationMutation()
 
-  const [error, setError] = useState<string>()
+  return async (
+    args: RegistrationArgs,
+    actions: FormikHelpers<RegistrationArgs>
+  ) => {
+    try {
+      const data = await register(args).unwrap()
 
-  const [time, setTime] = useState<number>()
-
-  // Function to clear error after some time
-  const clearTime = () => {
-    clearTimeout(time)
-    setTime(
-      setTimeout(() => {
-        setError(undefined)
-      }, 5000)
-    )
-  }
-
-  return [
-    async (args: RegistrationArgs) => {
-      try {
-        const data = await register(args).unwrap()
-
-        setError(undefined)
-
-        navigate('/registration/success')
-      } catch (e: any) {
-        if (e.status === 400) {
-          return (e as FailedResponse<ValidationError>).data.errors
-        } else if (e.status === 500) {
-          clearTime()
-          setError('Помилка серверу')
-        } else {
-          clearTime()
-          setError("Помилка з'єднання")
-        }
+      navigate('/registration/success')
+    } catch (e: any) {
+      if (e.status === 400) {
+        actions.setErrors((e as FailedResponse<ValidationError>).data.errors)
       }
-    },
-    error,
-  ] as const
+    }
+  }
 }
 
 export default useRegistration

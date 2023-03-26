@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 import useSettings from './hooks/useSettings'
 import { selectSettings } from './redux/slices/settings'
 import useGetMe from './hooks/useGetMe'
-import ErrorAlert from './components/ErrorAlert'
+import ErrorAlert from './components/ReduxAlert'
 
 function App() {
   const { mode, font } = useAppSelector(selectSettings)
