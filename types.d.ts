@@ -26,6 +26,11 @@ export interface LoginArgs {
   email: string
 }
 
+export interface PasswordUpdationArgs {
+  password: string
+  oldPassword: string
+}
+
 export interface FailedResponse<T> {
   status: number
   data: T
@@ -58,4 +63,12 @@ export interface Document {
   access: AccessLevel
   createdAt: string
   updatedAt: string
+}
+
+export type SettingsSection = 'account' | 'interface'
+
+export interface SettingsRequestBody {
+  mode?: Mode
+  color?: string
+  font?: Font
 }

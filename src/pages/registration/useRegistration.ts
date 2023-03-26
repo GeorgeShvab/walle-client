@@ -37,7 +37,6 @@ const useRegistration = () => {
 
         navigate('/registration/success')
       } catch (e: any) {
-        console.log(e)
         if (e.status === 400) {
           return (e as FailedResponse<ValidationError>).data.errors
         } else if (e.status === 500) {

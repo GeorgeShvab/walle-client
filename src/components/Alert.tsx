@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react'
 import MuiAlert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
+import Portal from '@mui/material/Portal'
 
 interface Props {
   type?: 'success' | 'error' | 'warning'
@@ -22,16 +23,18 @@ const Alert: FC<Props> = ({
   }, [open])
 
   return (
-    <Snackbar
-      open={state}
-      autoHideDuration={duration}
-      onClose={() => setState(false)}
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-    >
-      <MuiAlert severity={type} sx={{ width: '100%' }}>
-        {text}
-      </MuiAlert>
-    </Snackbar>
+    <Portal>
+      <Snackbar
+        open={state}
+        autoHideDuration={duration}
+        onClose={() => setState(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <MuiAlert severity={type} sx={{ width: '100%' }}>
+          {text}
+        </MuiAlert>
+      </Snackbar>
+    </Portal>
   )
 }
 

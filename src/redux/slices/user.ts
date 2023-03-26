@@ -27,6 +27,9 @@ const userSlice = createSlice({
       state.data = action.payload.user
       state.isLoading = false
     },
+    authorize: (state, action: { payload: User }) => {
+      state.data = action.payload
+    },
     unauthorize: (state) => {
       state.data = null
       state.isLoading = true
@@ -36,4 +39,6 @@ const userSlice = createSlice({
 
 export default userSlice.reducer
 
-export const { setUser, unauthorize } = userSlice.actions
+export const { setUser, unauthorize, authorize } = userSlice.actions
+
+export const selectUser = ({ user }: { user: UserState }) => user

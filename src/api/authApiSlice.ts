@@ -1,4 +1,11 @@
-import { AuthResponse, LoginArgs, RegistrationArgs, User } from '../../types'
+import {
+  AuthResponse,
+  LoginArgs,
+  PasswordUpdationArgs,
+  RegistrationArgs,
+  User,
+} from '../../types'
+import getLocalValue from '../utils/getLocalValue'
 import apiSlice from './apiSlice'
 
 const authApiSlice = apiSlice.injectEndpoints({
@@ -32,6 +39,15 @@ const authApiSlice = apiSlice.injectEndpoints({
         body: { verificationToken: token },
       }),
     }),
+    logout: builder.mutation<void, void>({
+      query: () => {
+        return {
+          url: '/auth/logout',
+          method: 'POST',
+          body: { refreshToken: getLocalValue('RefreshToken') },
+        }
+      },
+    }),
   }),
 })
 
@@ -40,4 +56,5 @@ export const {
   useRegistrationMutation,
   useLoginMutation,
   useVerifyMutation,
+  useLogoutMutation,
 } = authApiSlice

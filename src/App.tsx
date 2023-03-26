@@ -3,13 +3,19 @@ import Router from './Router'
 import ThemeProvider from '@mui/material/styles/ThemeProvider'
 import { themeSettings } from './theme'
 import { useAppSelector } from './redux/store'
-import { selectMode } from './redux/slices/mode'
 import { useMemo } from 'react'
+import useSettings from './hooks/useSettings'
+import { selectSettings } from './redux/slices/settings'
+import useGetMe from './hooks/useGetMe'
+import ErrorAlert from './components/ErrorAlert'
 
 function App() {
-  const mode = useAppSelector(selectMode)
+  const { mode, font } = useAppSelector(selectSettings)
 
-  const theme = useMemo(() => themeSettings('light', 'Rubik'), [mode])
+  useSettings()
+  useGetMe()
+
+  const theme = useMemo(() => themeSettings(mode, font), [mode, font])
 
   return (
     <div
@@ -18,6 +24,7 @@ function App() {
     >
       <ThemeProvider theme={theme}>
         <Router />
+        <ErrorAlert />
       </ThemeProvider>
     </div>
   )

@@ -12,6 +12,7 @@ import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { unauthorize } from '../redux/slices/user'
 import { Mutex } from 'async-mutex'
 import { REHYDRATE } from 'redux-persist'
+import { showError } from '../redux/slices/error'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_APP_SERVER_ADDRESS,
@@ -75,6 +76,12 @@ const queryWithRefetch: BaseQueryFn = async (args, api, extraOptions) => {
 
       result = await baseQuery(args, api, extraOptions)
     }
+  }
+
+  if (result.error?.status === 500) {
+    api.dispatch(showError('Помилка серверу'))
+  } else if (result.error?.status === 'FETCH_ERROR') {
+    api.dispatch(showError("Помилка з'єднання"))
   }
 
   return result

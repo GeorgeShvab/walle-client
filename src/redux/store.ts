@@ -1,5 +1,4 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import mode from './slices/mode'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import apiSlice from '../api/apiSlice'
 import user from './slices/user'
@@ -14,6 +13,8 @@ import {
   REGISTER,
 } from 'redux-persist'
 import opened from './slices/opened'
+import settings from './slices/settings'
+import error from './slices/error'
 
 const persistConfig = {
   key: 'root',
@@ -24,9 +25,10 @@ const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     [apiSlice.reducerPath]: apiSlice.reducer,
-    mode,
     user,
     opened,
+    settings,
+    error,
   })
 )
 
