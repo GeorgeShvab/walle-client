@@ -42,19 +42,22 @@ const Settings: FC<PropsType> = ({ open, onClose }) => {
             sx={{
               height: '75vh',
               width: isLesserThanMd ? '95vw' : '700px',
-              overflow: 'hidden',
+              overflow: isLesserThanMd ? 'auto' : 'hidden',
               position: 'relative',
             }}
           >
-            <Box display="flex" height="100%">
-              <Box flex="0 0 30%" padding="25px 40px 25px 10px">
+            <Box
+              display={isLesserThanMd ? 'block' : 'flex'}
+              height={isLesserThanMd ? 'fit-content' : '100%'}
+            >
+              <Box flex="0 0 30%" padding={'25px 40px 25px 10px'}>
                 <Typography variant="h5" mb="15px" pl="25px">
                   Налаштування
                 </Typography>
                 <SettingsMenu section={section} onClick={handleChangeSection} />
               </Box>
               <Box
-                padding="28px 40px"
+                padding={isLesserThanMd ? '28px 40px 40px' : '28px 40px'}
                 height="100%"
                 flex="0 3 70%"
                 sx={{
@@ -72,7 +75,11 @@ const Settings: FC<PropsType> = ({ open, onClose }) => {
               </Box>
             </Box>
             <IconButton
-              sx={{ position: 'absolute', top: '15px', right: '15px' }}
+              sx={{
+                position: 'absolute',
+                top: isLesserThanMd ? '25px' : '15px',
+                right: isLesserThanMd ? '20px' : '15px',
+              }}
               onClick={handleClose}
               size="small"
             >
