@@ -19,6 +19,7 @@ import alert from './slices/alert'
 const persistConfig = {
   key: 'root',
   storage,
+  blacklist: ['alert'],
 }
 
 const persistedReducer = persistReducer(

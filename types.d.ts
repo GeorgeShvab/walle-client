@@ -72,3 +72,18 @@ export interface SettingsRequestBody {
   color?: string
   font?: Font
 }
+
+export interface DialogPropsType extends Document {
+  open: boolean
+  onClose: () => void
+}
+
+export type AccessType = 'private' | 'restricted' | 'public'
+
+interface DocumentUpdationRequestBody {
+  access?: AccessType
+  title?: string
+  text?: string
+  type?: string
+  id: string
+}
