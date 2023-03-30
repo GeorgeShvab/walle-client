@@ -30,7 +30,7 @@ const DocumentIcon: FC<PropsType> = ({ sx, type }) => {
             }
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clipPath="url(#clip0_97_1484)">
+            <g>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -86,7 +86,7 @@ const DocumentIcon: FC<PropsType> = ({ sx, type }) => {
             }
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clipPath="url(#clip0_97_1484)">
+            <g>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -209,7 +209,7 @@ const DocumentIcon: FC<PropsType> = ({ sx, type }) => {
             }
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clipPath="url(#clip0_97_1478)">
+            <g>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -275,7 +275,7 @@ const DocumentIcon: FC<PropsType> = ({ sx, type }) => {
             }
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clipPath="url(#clip0_97_1489)">
+            <g>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -331,7 +331,7 @@ const DocumentIcon: FC<PropsType> = ({ sx, type }) => {
             }
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clipPath="url(#clip0_97_1478)">
+            <g>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"

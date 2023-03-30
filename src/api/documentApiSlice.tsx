@@ -24,6 +24,11 @@ const documentApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Documents'],
     }),
+    getDocument: builder.query<Document, string>({
+      query: (id) => ({
+        url: '/document/' + id,
+      }),
+    }),
   }),
 })
 
@@ -31,4 +36,5 @@ export const {
   useGetDocumentsQuery,
   useDeleteDocumentMutation,
   useUpdateDocumentMutation,
+  useGetDocumentQuery,
 } = documentApiSlice

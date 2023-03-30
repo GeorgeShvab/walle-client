@@ -73,7 +73,7 @@ const Home: FC = () => {
                       ? palette.primary.main
                       : palette.grey[600],
                 },
-                fontSize: '60px',
+                fontSize: isBiggerThanMd ? '60px' : '40px',
               }}
             />
           </Paper>

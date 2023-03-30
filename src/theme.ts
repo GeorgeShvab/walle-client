@@ -8,6 +8,7 @@ declare module '@mui/material/styles/createPalette' {
   }
   interface TypeBackground {
     light: string
+    dark: string
   }
 }
 
@@ -40,7 +41,7 @@ const darkThemeTokens = {
   background: {
     light: '#202020',
     main: '#121212',
-    dark: '#121212',
+    dark: '#101010',
     default: '#121212',
   },
   secondary: {

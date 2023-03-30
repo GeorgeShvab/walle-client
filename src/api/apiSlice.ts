@@ -53,22 +53,26 @@ const queryWithRefetch: BaseQueryFn = async (args, api, extraOptions) => {
 
       if (error?.status === 400) {
         api.dispatch(unauthorize())
-      }
+      } else if (error?.status === 500) {
+        api.dispatch(showAlert('Помилка серверу'))
+      } else if (error?.status === 'FETCH_ERROR') {
+        api.dispatch(showAlert("Помилка з'єднання"))
+      } else if (data) {
+        setLocalValue('AccessToken', data.accessToken)
+        setLocalValue('RefreshToken', data.refreshToken)
 
-      setLocalValue('AccessToken', data.accessToken)
-      setLocalValue('RefreshToken', data.refreshToken)
-
-      result = await baseQuery(
-        {
-          ...args,
-          headers: {
-            ...args.headers,
-            Authorization: data.accessToken,
+        result = await baseQuery(
+          {
+            ...args,
+            headers: {
+              ...args.headers,
+              Authorization: data.accessToken,
+            },
           },
-        },
-        api,
-        extraOptions
-      )
+          api,
+          extraOptions
+        )
+      }
 
       release()
     } else {

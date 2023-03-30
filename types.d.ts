@@ -87,3 +87,23 @@ interface DocumentUpdationRequestBody {
   type?: string
   id: string
 }
+
+import 'draft-js'
+
+declare module 'draft-js' {
+  export interface DraftDecoratorComponentProps {
+    blockKey: any
+    children?: ReactNode
+    contentState: ContentState
+    decoratedText: string
+    dir?: any
+    end: number
+    entityKey?: string
+    offsetKey: string
+    start: number
+  }
+}
+
+export type InlineStyle = 'BOLD' | 'ITALIC' | 'UNDERLINE' | 'STRIKETHROUGH'
+
+export type BlockStyle = 'ordered-list-item' | 'unordered-list-item'

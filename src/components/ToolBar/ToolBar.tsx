@@ -14,12 +14,8 @@ const ToolBar: FC = () => {
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
   return (
-    <Box>
-      <Box
-        display="flex"
-        padding={isLesserThanMd ? '5px 0' : '0'}
-        width="100vw"
-      >
+    <Box component="header">
+      <Box display="flex" padding={isLesserThanMd ? '5px 0' : '0'} width="100%">
         <Box
           flex={isLesserThanMd ? '3 0 auto' : '0 0 auto'}
           display="flex"
