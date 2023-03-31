@@ -1,5 +1,9 @@
 import apiSlice from './apiSlice'
-import { AccessType, Document, DocumentUpdationRequestBody } from '../../types'
+import {
+  Document,
+  DocumentTextUpdationRequestBody,
+  DocumentUpdationRequestBody,
+} from '../../types'
 
 const documentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -29,6 +33,15 @@ const documentApiSlice = apiSlice.injectEndpoints({
         url: '/document/' + id,
       }),
     }),
+    updateDocumentText: builder.mutation<void, DocumentTextUpdationRequestBody>(
+      {
+        query: (body) => ({
+          url: '/document/' + body.id,
+          method: 'PATCH',
+          body,
+        }),
+      }
+    ),
   }),
 })
 
@@ -37,4 +50,5 @@ export const {
   useDeleteDocumentMutation,
   useUpdateDocumentMutation,
   useGetDocumentQuery,
+  useUpdateDocumentTextMutation,
 } = documentApiSlice

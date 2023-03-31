@@ -1,4 +1,13 @@
-import { FC, useState, useMemo, MouseEvent, FormEvent } from 'react'
+import {
+  FC,
+  useState,
+  useMemo,
+  MouseEvent,
+  FormEvent,
+  useRef,
+  useEffect,
+  memo,
+} from 'react'
 import { EditorState, RichUtils } from 'draft-js'
 import Paper from '@mui/material/Paper'
 import FormatBoldIcon from '@mui/icons-material/FormatBold'
@@ -29,7 +38,13 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
+  const inputRef = useRef<HTMLInputElement>(null)
+
   const [linkPopoverEl, setLinkPopoverEl] = useState<HTMLButtonElement>()
+
+  useEffect(() => {
+    if (linkPopoverEl) setTimeout(() => inputRef.current?.focus(), 50)
+  }, [linkPopoverEl])
 
   const styles = useMemo(
     () =>
@@ -49,9 +64,9 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
   }
 
   const addLink = (url: string) => {
-    let contentState = editorState.getCurrentContent()
+    const currentContentState = editorState.getCurrentContent()
 
-    contentState = contentState.createEntity('LINK', 'MUTABLE', {
+    const contentState = currentContentState.createEntity('LINK', 'MUTABLE', {
       url: url,
     })
 
@@ -82,10 +97,14 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
   ) => {
     e.preventDefault()
 
-    const url = e.target.url.value
+    let url = e.target.url.value.trim()
 
-    if (url.trim()) {
-      addLink(e.target.url.value.trim())
+    if (!/http|https/.test(url)) {
+      url = 'https://' + url
+    }
+
+    if (url) {
+      addLink(url)
     }
 
     setLinkPopoverEl(undefined)
@@ -194,6 +213,7 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
                   size="small"
                   placeholder="https://example.com"
                   name="url"
+                  inputRef={inputRef}
                 />
               </Box>
               <Button type="submit" fullWidth>
@@ -210,4 +230,4 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
   )
 }
 
-export default ToolBar
+export default memo(ToolBar)

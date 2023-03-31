@@ -23,7 +23,7 @@ export const Link: FC<DraftDecoratorComponentProps> = (props) => {
   return (
     <MuiLink
       href={url}
-      color={palette.mode === 'light' ? '#0000ee' : '#0000bb'}
+      color={palette.mode === 'light' ? '#0000ee' : '#8D79C6'}
       onClick={handleClick}
       sx={{ cursor: 'pointer' }}
     >
@@ -43,7 +43,7 @@ export const LinkifyLink: ComponentType<ComponentProps<any>> = (
 
   return (
     <MuiLink
-      color={palette.mode === 'light' ? '#0000ee' : '#0000bb'}
+      color={palette.mode === 'light' ? '#0000ee' : '#8D79C6'}
       onClick={handleClick}
       sx={{ cursor: 'pointer' }}
       href={props.href}

@@ -88,6 +88,16 @@ interface DocumentUpdationRequestBody {
   id: string
 }
 
+export interface DocumentTextUpdationRequestBody
+  extends Omit<
+    DocumentUpdationRequestBody,
+    {
+      access
+      title
+      type
+    }
+  > {}
+
 import 'draft-js'
 
 declare module 'draft-js' {

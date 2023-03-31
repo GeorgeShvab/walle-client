@@ -1,9 +1,14 @@
-import { FC, useState } from 'react'
+import { FC, useState, useCallback, KeyboardEvent } from 'react'
 import {
   EditorState,
   ContentState,
   CompositeDecorator,
   ContentBlock,
+  convertToRaw,
+  convertFromRaw,
+  RawDraftContentState,
+  RichUtils,
+  getDefaultKeyBinding,
 } from 'draft-js'
 import useTheme from '@mui/material/styles/useTheme'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -13,8 +18,8 @@ import { Link, LinkifyLink } from './Link'
 import Editor from '@draft-js-plugins/editor'
 import createLinkifyPlugin from '@draft-js-plugins/linkify'
 import Box from '@mui/material/Box'
-
-const linkifyPlugin = createLinkifyPlugin({ component: LinkifyLink })
+import { useUpdateDocumentText } from '../../hooks/useDocument'
+import debounce from '../../utils/debounce'
 
 const styleMap = {
   STRIKETHROUGH: {
@@ -29,6 +34,7 @@ function findLinkEntities(
 ) {
   contentBlock.findEntityRanges((character) => {
     const entityKey = character.getEntity()
+
     return (
       entityKey !== null &&
       contentState.getEntity(entityKey).getType() === 'LINK'
@@ -36,21 +42,80 @@ function findLinkEntities(
   }, callback)
 }
 
-const TextEditor: FC<Document> = ({ text }) => {
+const linkifyPlugin = createLinkifyPlugin({ component: LinkifyLink })
+
+const decorator = new CompositeDecorator([
+  {
+    strategy: findLinkEntities,
+    component: Link,
+  },
+])
+
+const standardCommands: string[] = ['bold', 'underline', 'italic']
+
+const TextEditor: FC<
+  Document & { isLoading: boolean; currentUser: string | undefined }
+> = ({ text, id, isLoading, currentUser, owner, access }) => {
   const { palette, breakpoints } = useTheme()
+
+  const [update] = useUpdateDocumentText()
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
-  const decorator = new CompositeDecorator([
-    {
-      strategy: findLinkEntities,
-      component: Link,
-    },
-  ])
-
   const [editorState, setEditorState] = useState<EditorState>(
-    EditorState.createWithContent(ContentState.createFromText(text), decorator)
+    EditorState.createWithContent(
+      convertFromRaw(JSON.parse(text) as RawDraftContentState)
+    )
   )
+
+  const updateDoc = useCallback(
+    debounce((state: EditorState) => {
+      if (!isLoading) {
+        if (owner === currentUser || access === 'public') {
+          update({
+            text: JSON.stringify(convertToRaw(state.getCurrentContent())),
+            id,
+          })
+        }
+      }
+    }, 7500),
+    [id, isLoading]
+  )
+
+  const handleChange = useCallback(
+    (state: EditorState) => {
+      setEditorState(state)
+      updateDoc(state)
+    },
+    [id, isLoading]
+  )
+
+  const handleKeyCommand = (
+    command: string,
+    state: EditorState
+  ): 'handled' | 'not-handled' => {
+    if (standardCommands.includes(command)) {
+      const newState = RichUtils.handleKeyCommand(state, command)
+
+      newState && setEditorState(newState)
+      return 'handled'
+    } else if (command === 'strikethrough') {
+      const newState = RichUtils.toggleInlineStyle(state, command.toUpperCase())
+
+      newState && setEditorState(newState)
+      return 'handled'
+    }
+
+    return 'not-handled'
+  }
+
+  const keyBinding = (e: KeyboardEvent): null | string => {
+    if (e.key === 's' && e.ctrlKey) {
+      return 'strikethrough'
+    }
+
+    return getDefaultKeyBinding(e)
+  }
 
   return (
     <Box>
@@ -78,8 +143,10 @@ const TextEditor: FC<Document> = ({ text }) => {
           <Editor
             editorState={editorState}
             customStyleMap={styleMap}
-            onChange={(state) => setEditorState(state)}
-            plugins={[linkifyPlugin]}
+            onChange={handleChange}
+            keyBindingFn={keyBinding}
+            handleKeyCommand={handleKeyCommand}
+            plugins={[linkifyPlugin, { decorators: [decorator] }]}
           />
         </Box>
       </Box>
