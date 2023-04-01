@@ -50,7 +50,7 @@ const Index: FC = () => {
             <Box>
               <Typography color={palette.primary.light}>
                 Вже зареєстровані? <Link to="/login">Увійти</Link> або{' '}
-                <Link to="/app">Меню</Link>
+                <Link to="/home">Меню</Link>
               </Typography>
               <Typography color={palette.primary.light}>
                 &copy;Георгій Шваб. Всі права збережено.

@@ -41,10 +41,7 @@ const Home: FC = () => {
         sx={{ gridGap: isBiggerThanMd ? '15px' : '10px' }}
         padding={isBiggerThanMd ? '25px' : '15px'}
       >
-        {data?.map((item) => (
-          <Document key={item.id} {...item} />
-        ))}
-        <Link to={`/new`}>
+        <Link to={`/documents/new`}>
           <Paper
             sx={{
               transition: '0.15s box-shadow, 0.15s background',
@@ -78,6 +75,9 @@ const Home: FC = () => {
             />
           </Paper>
         </Link>
+        {data?.map((item) => (
+          <Document key={item.id} {...item} />
+        ))}
       </Box>
     </Box>
   )

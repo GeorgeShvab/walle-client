@@ -42,6 +42,12 @@ const documentApiSlice = apiSlice.injectEndpoints({
         }),
       }
     ),
+    createDocument: builder.mutation<Document, void>({
+      query: () => ({
+        url: '/document',
+        method: 'POST',
+      }),
+    }),
   }),
 })
 
@@ -51,4 +57,5 @@ export const {
   useUpdateDocumentMutation,
   useGetDocumentQuery,
   useUpdateDocumentTextMutation,
+  useCreateDocumentMutation,
 } = documentApiSlice

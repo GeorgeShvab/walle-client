@@ -8,6 +8,7 @@ import Home from './pages/home/Home'
 import RegistrationSuccess from './pages/registration/RegistrationSuccess'
 import Verification from './pages/registration/Verification'
 import Document from './pages/document/Document'
+import NewDocument from './pages/document/NewDocument'
 
 const Router: FC = () => {
   return (
@@ -30,6 +31,14 @@ const Router: FC = () => {
         element={
           <Layout>
             <Document />
+          </Layout>
+        }
+      />
+      <Route
+        path="/documents/new"
+        element={
+          <Layout>
+            <NewDocument />
           </Layout>
         }
       />

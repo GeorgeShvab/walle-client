@@ -1,17 +1,17 @@
 import { FC, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
-import { open } from '../../redux/slices/opened'
 import 'draft-js/dist/Draft.css'
 import TextEditor from './TextEditor'
 import { useGetDocumentQuery } from '../../api/documentApiSlice'
 import Box from '@mui/material/Box'
-import Skeleton from '@mui/material/Skeleton'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import generateId from '../../utils/generateId'
 import useTheme from '@mui/material/styles/useTheme'
 import { selectUser } from '../../redux/slices/user'
 import Error from '../../components/Error'
 import CircularProgress from '@mui/material/CircularProgress'
+import { openTab } from '../../redux/slices/tabs'
 
 const Document: FC = () => {
   const dispatch = useAppDispatch()
@@ -24,13 +24,25 @@ const Document: FC = () => {
 
   const { id } = useParams()
 
+  const { search } = useLocation()
+
   const { data, isLoading, error } = useGetDocumentQuery(id || '')
 
   useEffect(() => {
     if (id && data) {
-      dispatch(open(id))
+      const tabId = new URLSearchParams(search).get('tabId')
+
+      dispatch(
+        openTab({
+          ...(tabId ? { tabId: tabId } : { tabId: generateId() }),
+          title: data.title,
+          type: data.type,
+          selected: true,
+          id,
+        })
+      )
     }
-  }, [id, data])
+  }, [id, data, search])
 
   // used key here because of some bug when setting new state with useEffect. Linkify plugin stops working when I use useEffect
 
@@ -50,7 +62,7 @@ const Document: FC = () => {
               transform: 'translate(-50%, -50%)',
             }}
             title={(error as any)?.status || '500'}
-            subtitle={(error as any)?.data.msg || "Помилка з'єднання"}
+            subtitle={(error as any)?.data?.msg || "Помилка з'єднання"}
           />
         </Box>
       </Box>

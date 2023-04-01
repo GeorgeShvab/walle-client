@@ -3,43 +3,34 @@ import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGetDocumentsQuery } from '../../api/documentApiSlice'
 import usePage from '../../hooks/usePage'
-import { selectOpened } from '../../redux/slices/opened'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import * as types from '../../../types'
-import { close } from '../../redux/slices/opened'
 import Tab from '../Tab/VerticalTab'
 import AddTab from './AddTab'
+import { closeTab, selectTabs } from '../../redux/slices/tabs'
 
 const Tabs: FC = () => {
   const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
 
-  const opened = useAppSelector(selectOpened)
-
-  const { data } = useGetDocumentsQuery('documents=' + opened.join('+'))
-
   const { id } = usePage()
 
-  const selectDocument = (doc: types.Document) => {
-    navigate(`/documents/${doc.id}`)
-  }
+  const tabs = useAppSelector(selectTabs)
 
-  const closeDocument = (doc: types.Document) => {
-    dispatch(close(doc.id))
+  const closeDocument = (tab: types.Tab) => {
+    dispatch(closeTab(tab.tabId))
+
+    if (tab.id === id) {
+      navigate('/home')
+    }
   }
 
   return (
     <Box>
       <AddTab />
-      {data?.map((item) => (
-        <Tab
-          key={item.id}
-          onClick={selectDocument}
-          onClose={closeDocument}
-          selected={Boolean(id === item.id)}
-          {...item}
-        />
+      {tabs?.map((item) => (
+        <Tab key={item.tabId} onClose={closeDocument} {...item} />
       ))}
     </Box>
   )

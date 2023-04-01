@@ -12,9 +12,9 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist'
-import opened from './slices/opened'
 import settings from './slices/settings'
 import alert from './slices/alert'
+import tabs from './slices/tabs'
 
 const persistConfig = {
   key: 'root',
@@ -27,9 +27,9 @@ const persistedReducer = persistReducer(
   combineReducers({
     [apiSlice.reducerPath]: apiSlice.reducer,
     user,
-    opened,
     settings,
     alert,
+    tabs,
   })
 )
 

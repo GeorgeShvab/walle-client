@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box'
 import { FC, useEffect, useRef } from 'react'
-import { useGetDocumentsQuery } from '../../api/documentApiSlice'
 import useTheme from '@mui/material/styles/useTheme'
 import usePage from '../../hooks/usePage'
 import * as types from '../../../types'
@@ -8,22 +7,20 @@ import { useNavigate } from 'react-router-dom'
 import { ScrollContainer } from 'react-indiana-drag-scroll'
 import 'react-indiana-drag-scroll/dist/style.css'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
-import { selectOpened, close } from '../../redux/slices/opened'
 import AddButton from './AddButton'
 import Tab from '../Tab/HorizontalTab'
+import { closeTab, selectTabs } from '../../redux/slices/tabs'
 
 const Tabs: FC = () => {
   const dispatch = useAppDispatch()
 
   const { palette } = useTheme()
 
+  const { id } = usePage()
+
   const navigate = useNavigate()
 
-  const opened = useAppSelector(selectOpened)
-
-  const { data } = useGetDocumentsQuery('documents=' + opened.join('+'))
-
-  const { id } = usePage()
+  const tabs = useAppSelector(selectTabs)
 
   const wrapperRef = useRef<HTMLDivElement>(null)
 
@@ -41,13 +38,15 @@ const Tabs: FC = () => {
     wrapperRef.current?.scrollBy({ left: e.deltaY < 0 ? -30 : 30 })
   }
 
-  const selectDocument = (doc: types.Document) => {
-    navigate(`/documents/${doc.id}`)
+  const closeDocument = (tab: types.Tab) => {
+    dispatch(closeTab(tab.tabId))
+
+    if (tab.id === id) {
+      navigate('/home')
+    }
   }
 
-  const closeDocument = (doc: types.Document) => {
-    dispatch(close(doc.id))
-  }
+  console.log(tabs)
 
   return (
     <Box
@@ -74,14 +73,8 @@ const Tabs: FC = () => {
           width="fit-content"
           sx={{ cursor: 'default' }}
         >
-          {data?.map((item) => (
-            <Tab
-              key={item.id}
-              onClick={selectDocument}
-              onClose={closeDocument}
-              selected={Boolean(id === item.id)}
-              {...item}
-            />
+          {tabs?.map((item) => (
+            <Tab key={item.tabId} onClose={closeDocument} {...item} />
           ))}
           <AddButton />
         </Box>

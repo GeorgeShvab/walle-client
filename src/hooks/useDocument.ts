@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  useCreateDocumentMutation,
   useDeleteDocumentMutation,
   useUpdateDocumentMutation,
   useUpdateDocumentTextMutation,
@@ -146,6 +147,52 @@ export const useUpdateDocumentText = () => {
 
         if (e.status === 400) {
           const errors = (e as FailedResponse<ValidationError>).data.errors
+        }
+
+        setStatus({
+          error: true,
+          success: false,
+          isLoading: false,
+        })
+      }
+    },
+    status,
+  ] as const
+}
+
+export const useCreateDocument = () => {
+  const dispatch = useAppDispatch()
+
+  const [status, setStatus] = useState<Status>({
+    error: false,
+    success: false,
+    isLoading: false,
+  })
+
+  const [createDoc] = useCreateDocumentMutation()
+
+  return [
+    async () => {
+      try {
+        setStatus({
+          error: false,
+          success: false,
+          isLoading: true,
+        })
+
+        const data = await createDoc().unwrap()
+
+        setStatus({
+          error: false,
+          success: true,
+          isLoading: false,
+        })
+
+        return data
+      } catch (e: any) {
+        if (e.status !== 500 && e.status !== 'FETCH_ERROR') {
+          console.log(e)
+          dispatch(showAlert('Помилка при створенні документа'))
         }
 
         setStatus({

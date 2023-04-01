@@ -63,9 +63,11 @@ const TextEditor: FC<
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
   const [editorState, setEditorState] = useState<EditorState>(
-    EditorState.createWithContent(
-      convertFromRaw(JSON.parse(text) as RawDraftContentState)
-    )
+    text
+      ? EditorState.createWithContent(
+          convertFromRaw(JSON.parse(text) as RawDraftContentState)
+        )
+      : EditorState.createEmpty()
   )
 
   const updateDoc = useCallback(

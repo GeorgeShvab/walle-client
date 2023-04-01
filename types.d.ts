@@ -117,3 +117,11 @@ declare module 'draft-js' {
 export type InlineStyle = 'BOLD' | 'ITALIC' | 'UNDERLINE' | 'STRIKETHROUGH'
 
 export type BlockStyle = 'ordered-list-item' | 'unordered-list-item'
+
+export interface Tab {
+  id?: string
+  tabId: string
+  title: string
+  type: DocumentType
+  selected: boolean
+}
