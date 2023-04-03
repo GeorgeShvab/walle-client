@@ -75,6 +75,7 @@ const Tabs: FC = () => {
             <Tab
               key={item.id || item.tabId}
               onClose={closeDocument}
+              selected={id === item.id || !item.id}
               {...item}
             />
           ))}

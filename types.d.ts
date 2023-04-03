@@ -123,5 +123,4 @@ export interface Tab {
   tabId: string
   title: string
   type: DocumentType
-  selected: boolean
 }

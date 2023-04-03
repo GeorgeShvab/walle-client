@@ -1,4 +1,4 @@
-import { FC, useState, useCallback, KeyboardEvent } from 'react'
+import { FC, useState, useCallback, KeyboardEvent, useEffect } from 'react'
 import {
   EditorState,
   ContentState,
@@ -87,10 +87,32 @@ const TextEditor: FC<
   const handleChange = useCallback(
     (state: EditorState) => {
       setEditorState(state)
-      updateDoc(state)
     },
     [id, isLoading]
   )
+
+  useEffect(() => {
+    const initialStateString = text
+      ? JSON.stringify(
+          convertToRaw(
+            EditorState.createWithContent(
+              convertFromRaw(JSON.parse(text) as RawDraftContentState)
+            ).getCurrentContent()
+          )
+        )
+      : ''
+
+    const currentStateString = JSON.stringify(
+      convertToRaw(editorState.getCurrentContent())
+    )
+
+    if (
+      (editorState.getCurrentContent().getPlainText() || !initialStateString) &&
+      initialStateString !== currentStateString
+    ) {
+      updateDoc(editorState)
+    }
+  }, [JSON.stringify(convertToRaw(editorState.getCurrentContent()))])
 
   const handleKeyCommand = (
     command: string,

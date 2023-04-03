@@ -1,5 +1,6 @@
 import { Action, createSlice } from '@reduxjs/toolkit'
 import { Document, Tab } from '../../../types'
+import { ListItem } from '@mui/material'
 
 interface TabsState {
   tabs: Tab[]
@@ -10,7 +11,7 @@ const initialState: TabsState = {
 }
 
 interface OpenTabAction extends Action {
-  payload: ({ tabId?: string } & Omit<Tab, 'tabId'>) | Tab
+  payload: Tab
 }
 
 interface CloseTabAction extends Action {
@@ -21,16 +22,12 @@ interface MergeTabsAction extends Action {
   payload: Document[]
 }
 
-interface UnselectAction extends Action {
-  payload: string
-}
-
 interface NewTabAction extends Action {
   payload: Omit<Tab, 'id'>
 }
 
 interface MergeTabAction extends Action {
-  payload: Document & { tabId: string; selected: boolean }
+  payload: Document & { tabId: string }
 }
 
 const tabsSlice = createSlice({
@@ -38,23 +35,20 @@ const tabsSlice = createSlice({
   initialState,
   reducers: {
     openTab: (state, action: OpenTabAction) => {
-      state.tabs = state.tabs.map((item) => {
-        if (item.id === action.payload.id && item.id) {
-          return {
-            ...item,
-            ...action.payload,
-            selected: true,
-          }
-        }
+      const docIds = state.tabs.map((item) => item.id)
 
-        return { ...item, selected: false }
-      })
+      if (!docIds.includes(action.payload.id)) {
+        state.tabs = [...state.tabs, action.payload]
+      } else {
+        state.tabs = state.tabs.map((item) => {
+          return item.id === action.payload.id
+            ? { ...item, ...action.payload }
+            : item
+        })
+      }
     },
     newTab: (state, action: NewTabAction) => {
-      state.tabs = [
-        ...state.tabs.map((item) => ({ ...item, selected: false })),
-        { ...action.payload, selected: true },
-      ]
+      state.tabs = [...state.tabs.map((item) => ({ ...item })), action.payload]
     },
     mergeTab: (state, action: MergeTabAction) => {
       state.tabs = state.tabs.map((item) =>
@@ -63,7 +57,6 @@ const tabsSlice = createSlice({
               id: action.payload.id,
               title: action.payload.title,
               type: action.payload.type,
-              selected: action.payload.selected,
               tabId: action.payload.tabId,
             }
           : item
@@ -83,7 +76,6 @@ const tabsSlice = createSlice({
             id: item.id,
             title: loadedTab.title,
             type: loadedTab.type,
-            selected: item.selected,
             tabId: item.tabId,
           }
         }
@@ -91,17 +83,12 @@ const tabsSlice = createSlice({
         return item
       })
     },
-    unselect: (state, action: UnselectAction) => {
-      state.tabs = state.tabs.map((item) =>
-        item.id === action.payload ? { ...item, selected: false } : item
-      )
-    },
   },
 })
 
 export default tabsSlice.reducer
 
-export const { closeTab, openTab, mergeTabs, unselect, newTab, mergeTab } =
+export const { closeTab, openTab, mergeTabs, newTab, mergeTab } =
   tabsSlice.actions
 
 export const selectTabs = ({ tabs }: { tabs: TabsState }) => tabs.tabs

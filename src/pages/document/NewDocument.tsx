@@ -5,7 +5,7 @@ import { useCreateDocument } from '../../hooks/useDocument'
 import { useNavigate } from 'react-router-dom'
 import Error from '../../components/Error'
 import { useAppDispatch } from '../../redux/store'
-import { newTab, openTab } from '../../redux/slices/tabs'
+import { newTab } from '../../redux/slices/tabs'
 import { Tab } from '../../../types'
 import generateId from '../../utils/generateId'
 
@@ -27,7 +27,6 @@ const NewDocument: FC = () => {
       tabId: tabId,
       title: 'Новий документ',
       type: 'txt',
-      selected: true,
     }
 
     dispatch(newTab(tab))

@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import { FC, memo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useGetDocumentsQuery } from '../../api/documentApiSlice'
 import usePage from '../../hooks/usePage'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import * as types from '../../../types'
@@ -30,7 +29,12 @@ const Tabs: FC = () => {
     <Box>
       <AddTab />
       {tabs?.map((item) => (
-        <Tab key={item.id || item.tabId} onClose={closeDocument} {...item} />
+        <Tab
+          key={item.id || item.tabId}
+          onClose={closeDocument}
+          selected={id === item.id}
+          {...item}
+        />
       ))}
     </Box>
   )

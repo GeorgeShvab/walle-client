@@ -11,7 +11,7 @@ import useTheme from '@mui/material/styles/useTheme'
 import { selectUser } from '../../redux/slices/user'
 import Error from '../../components/Error'
 import CircularProgress from '@mui/material/CircularProgress'
-import { mergeTab, openTab, unselect } from '../../redux/slices/tabs'
+import { mergeTab, openTab } from '../../redux/slices/tabs'
 
 const Document: FC = () => {
   const dispatch = useAppDispatch()
@@ -31,17 +31,19 @@ const Document: FC = () => {
   useEffect(() => {
     const tabId = new URLSearchParams(search).get('tabId')
 
-    if (id && data && tabId) {
-      dispatch(mergeTab({ ...data, tabId, selected: true }))
-    } else if (id && data) {
-      dispatch(
-        openTab({
-          title: data.title,
-          type: data.type,
-          selected: true,
-          id,
-        })
-      )
+    if (data && data?.id === id) {
+      if (id && tabId) {
+        dispatch(mergeTab({ ...data, tabId }))
+      } else if (id) {
+        dispatch(
+          openTab({
+            title: data.title,
+            type: data.type,
+            tabId: generateId(),
+            id,
+          })
+        )
+      }
     }
   }, [id, data, search])
 

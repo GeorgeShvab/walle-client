@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { FC, MouseEvent, memo } from 'react'
+import { FC, MouseEvent, memo, useEffect } from 'react'
 import Typography from '@mui/material/Typography'
 import useTheme from '@mui/material/styles/useTheme'
 import TabIcon from './TabIcon'
