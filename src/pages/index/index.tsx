@@ -24,9 +24,7 @@ const Index: FC = () => {
             display="flex"
             flexDirection="column"
             gap="50px"
-            minHeight={
-              isLesserThanMd ? ' calc(100vh - 100px)' : 'calc(100vh - 100px)'
-            }
+            minHeight="calc(100vh - 100px)"
             textAlign={isLesserThanMd ? 'center' : 'left'}
           >
             <Box flex="3 0 auto">

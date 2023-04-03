@@ -1,11 +1,12 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import useTheme from '@mui/material/styles/useTheme'
-import { FC } from 'react'
+import { FC, UIEvent, useEffect, useState } from 'react'
 import Tabs from './Tabs'
 import ToolBarLeftActions from '../ToolBar/ToolBarLeftActions'
 import Drawer from '@mui/material/Drawer'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import throttle from '../../utils/throttle'
 
 interface PropsType {
   onClose?: () => void
@@ -18,8 +19,30 @@ const Menu: FC<PropsType> = ({ onClose, onOpen, open }) => {
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
+  const [isScrolled, setIsScrolled] = useState<boolean>(false)
+
+  let handleScroll = (e: UIEvent<HTMLElement>) => {
+    if ((e.target as HTMLElement).scrollTop > 25) {
+      setIsScrolled(true)
+    } else if (isScrolled) {
+      setIsScrolled(false)
+    }
+  }
+
+  handleScroll = throttle(handleScroll, 50)
+
+  const handleClose = () => {
+    onClose && onClose()
+    setIsScrolled(false)
+  }
+
   return (
-    <Drawer open={open} onClose={onClose} sx={{ position: 'relative' }}>
+    <Drawer
+      open={open}
+      onClose={handleClose}
+      sx={{ position: 'relative' }}
+      SlideProps={{ onScroll: handleScroll }}
+    >
       <Box
         minHeight="100%"
         sx={{
@@ -47,7 +70,17 @@ const Menu: FC<PropsType> = ({ onClose, onOpen, open }) => {
             position="sticky"
             top="0"
             zIndex="10"
+            boxShadow={
+              isScrolled
+                ? `0 0 10px 0 ${
+                    palette.mode === 'light'
+                      ? palette.grey[400]
+                      : palette.background.default
+                  }`
+                : undefined
+            }
             sx={{
+              transition: '0.5s box-shadow',
               backgroundColor:
                 palette.mode === 'light'
                   ? palette.grey[100]

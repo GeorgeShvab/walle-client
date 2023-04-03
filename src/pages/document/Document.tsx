@@ -11,7 +11,7 @@ import useTheme from '@mui/material/styles/useTheme'
 import { selectUser } from '../../redux/slices/user'
 import Error from '../../components/Error'
 import CircularProgress from '@mui/material/CircularProgress'
-import { openTab } from '../../redux/slices/tabs'
+import { mergeTab, openTab, unselect } from '../../redux/slices/tabs'
 
 const Document: FC = () => {
   const dispatch = useAppDispatch()
@@ -29,12 +29,13 @@ const Document: FC = () => {
   const { data, isLoading, error } = useGetDocumentQuery(id || '')
 
   useEffect(() => {
-    if (id && data) {
-      const tabId = new URLSearchParams(search).get('tabId')
+    const tabId = new URLSearchParams(search).get('tabId')
 
+    if (id && data && tabId) {
+      dispatch(mergeTab({ ...data, tabId, selected: true }))
+    } else if (id && data) {
       dispatch(
         openTab({
-          ...(tabId ? { tabId: tabId } : { tabId: generateId() }),
           title: data.title,
           type: data.type,
           selected: true,
@@ -49,11 +50,7 @@ const Document: FC = () => {
   if (error) {
     return (
       <Box component="main">
-        <Box
-          padding={isLesserThanMd ? '15px 15px' : '25px'}
-          height={`calc(100vh - ${isLesserThanMd ? '150px' : '50px'})`}
-          position="relative"
-        >
+        <Box height="var(--screenHeight)" position="relative">
           <Error
             sx={{
               position: 'absolute',
@@ -74,7 +71,9 @@ const Document: FC = () => {
       {isLoading && !data ? (
         <Box
           padding={isLesserThanMd ? '15px 15px' : '25px'}
-          height={`calc(100vh - ${isLesserThanMd ? '150px' : '50px'})`}
+          height={`calc(var(--screenHeight) - ${
+            isLesserThanMd ? '30px' : '50px'
+          })`}
           position="relative"
         >
           <CircularProgress

@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { FC, useEffect, useRef } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import useTheme from '@mui/material/styles/useTheme'
 import usePage from '../../hooks/usePage'
 import * as types from '../../../types'
@@ -38,15 +38,13 @@ const Tabs: FC = () => {
     wrapperRef.current?.scrollBy({ left: e.deltaY < 0 ? -30 : 30 })
   }
 
-  const closeDocument = (tab: types.Tab) => {
-    dispatch(closeTab(tab.tabId))
+  const closeDocument = useCallback((tab: types.Tab) => {
+    dispatch(closeTab(tab.id || tab.tabId))
 
     if (tab.id === id) {
       navigate('/home')
     }
-  }
-
-  console.log(tabs)
+  }, [])
 
   return (
     <Box
@@ -69,12 +67,16 @@ const Tabs: FC = () => {
       >
         <Box
           display="flex"
-          padding="0 10px"
+          padding="0 16px 0 10px"
           width="fit-content"
           sx={{ cursor: 'default' }}
         >
           {tabs?.map((item) => (
-            <Tab key={item.tabId} onClose={closeDocument} {...item} />
+            <Tab
+              key={item.id || item.tabId}
+              onClose={closeDocument}
+              {...item}
+            />
           ))}
           <AddButton />
         </Box>

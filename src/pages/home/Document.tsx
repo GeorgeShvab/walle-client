@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import useTheme from '@mui/material/styles/useTheme'
 import Box from '@mui/material/Box'
-import { FC, useRef, useState, MouseEvent } from 'react'
+import { FC, useRef, useState, MouseEvent, memo } from 'react'
 import * as types from '../../../types'
 import DocumentIcon from './DocumentIcon'
 import { Link } from 'react-router-dom'
@@ -52,7 +52,6 @@ const Document: FC<types.Document> = (props) => {
           },
         }}
         onContextMenu={handleContextMenu}
-        onClick={() => console.log('click')}
         ref={containerRef}
       >
         <Typography
@@ -65,6 +64,7 @@ const Document: FC<types.Document> = (props) => {
           top={isLesserThanMd ? '10px' : '15px'}
           fontSize={isLesserThanMd ? 'small' : 'medium'}
           left="50%"
+          whiteSpace="nowrap"
           sx={{
             transform: 'translateX(-50%)',
             '&::after': {
@@ -100,4 +100,4 @@ const Document: FC<types.Document> = (props) => {
   )
 }
 
-export default Document
+export default memo(Document)

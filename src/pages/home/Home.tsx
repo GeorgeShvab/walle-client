@@ -7,9 +7,11 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Paper from '@mui/material/Paper'
 import { Link } from 'react-router-dom'
 import AddIcon from '@mui/icons-material/Add'
+import CircularProgress from '@mui/material/CircularProgress'
+import Error from '../../components/Error'
 
 const Home: FC = () => {
-  const { data } = useGetDocumentsQuery()
+  const { data, isLoading, error } = useGetDocumentsQuery()
 
   const { breakpoints, palette } = useTheme()
 
@@ -18,6 +20,8 @@ const Home: FC = () => {
   const isBiggerThanMd = useMediaQuery(breakpoints.up('md'))
   const isBiggerThanLg = useMediaQuery(breakpoints.up('lg'))
   const isBiggerThanXl = useMediaQuery(breakpoints.up('xl'))
+
+  const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
   let gridTemplateColumns: string = '1fr 1fr 1fr'
 
@@ -33,52 +37,91 @@ const Home: FC = () => {
     gridTemplateColumns = '1fr 1fr 1fr'
   }
 
+  if (error) {
+    return (
+      <Box component="main">
+        <Box height="var(--screenHeight)" position="relative">
+          <Error
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+            title={(error as any)?.status || '500'}
+            subtitle={(error as any)?.data?.msg || "Помилка з'єднання"}
+          />
+        </Box>
+      </Box>
+    )
+  }
+
   return (
     <Box component="main" overflow="hidden">
-      <Box
-        display="grid"
-        gridTemplateColumns={gridTemplateColumns}
-        sx={{ gridGap: isBiggerThanMd ? '15px' : '10px' }}
-        padding={isBiggerThanMd ? '25px' : '15px'}
-      >
-        <Link to={`/documents/new`}>
-          <Paper
+      {isLoading && !data ? (
+        <Box
+          height={`calc(var(--screenHeight) - ${
+            isLesserThanMd ? '30px' : '50px'
+          })`}
+          position="relative"
+        >
+          <CircularProgress
             sx={{
-              transition: '0.15s box-shadow, 0.15s background',
-              maxWidth: '200px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              aspectRatio: '1 / 1',
-              background:
-                palette.mode === 'light' ? undefined : palette.background.light,
-              '&:hover': {
-                boxShadow: `0px 2px 1px -1px rgba(0,0,0,0.3), 0px 1px 1px 0px rgba(0,0,0,0.24), 0px 1px 3px 0px rgba(0,0,0,0.22)`,
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        </Box>
+      ) : (
+        <Box
+          display="grid"
+          gridTemplateColumns={gridTemplateColumns}
+          sx={{ gridGap: isBiggerThanMd ? '15px' : '10px' }}
+          padding={isBiggerThanMd ? '25px' : '15px'}
+        >
+          <Link to={`/documents/new`}>
+            <Paper
+              sx={{
+                transition: '0.15s box-shadow, 0.15s background',
+                maxWidth: '200px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                aspectRatio: '1 / 1',
                 background:
                   palette.mode === 'light'
                     ? undefined
-                    : palette.background.light + 'd9',
-              },
-            }}
-          >
-            <AddIcon
-              sx={{
-                '& path': {
-                  fill:
+                    : palette.background.light,
+                '&:hover': {
+                  boxShadow: `0px 2px 1px -1px rgba(0,0,0,0.3), 0px 1px 1px 0px rgba(0,0,0,0.24), 0px 1px 3px 0px rgba(0,0,0,0.22)`,
+                  background:
                     palette.mode === 'light'
-                      ? palette.primary.main
-                      : palette.grey[600],
+                      ? undefined
+                      : palette.background.light + 'd9',
                 },
-                fontSize: isBiggerThanMd ? '60px' : '40px',
               }}
-            />
-          </Paper>
-        </Link>
-        {data?.map((item) => (
-          <Document key={item.id} {...item} />
-        ))}
-      </Box>
+            >
+              <AddIcon
+                sx={{
+                  '& path': {
+                    fill:
+                      palette.mode === 'light'
+                        ? palette.primary.main
+                        : palette.grey[600],
+                  },
+                  fontSize: isBiggerThanMd ? '60px' : '40px',
+                }}
+              />
+            </Paper>
+          </Link>
+          {data?.map((item) => (
+            <Document key={item.id} {...item} />
+          ))}
+        </Box>
+      )}
     </Box>
   )
 }

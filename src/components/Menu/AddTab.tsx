@@ -16,7 +16,7 @@ const AddTab: FC = () => {
   }
 
   return (
-    <Box padding="5px 15px 5px 0">
+    <Box padding="2px 15px 2px 0">
       <Box
         display="flex"
         alignItems="center"

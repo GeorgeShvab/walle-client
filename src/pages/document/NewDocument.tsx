@@ -5,7 +5,7 @@ import { useCreateDocument } from '../../hooks/useDocument'
 import { useNavigate } from 'react-router-dom'
 import Error from '../../components/Error'
 import { useAppDispatch } from '../../redux/store'
-import { openTab } from '../../redux/slices/tabs'
+import { newTab, openTab } from '../../redux/slices/tabs'
 import { Tab } from '../../../types'
 import generateId from '../../utils/generateId'
 
@@ -30,7 +30,7 @@ const NewDocument: FC = () => {
       selected: true,
     }
 
-    dispatch(openTab(tab))
+    dispatch(newTab(tab))
     ;(async () => {
       const data = await createDocument()
 
@@ -44,7 +44,9 @@ const NewDocument: FC = () => {
     <Box component="main">
       <Box
         padding={isLesserThanMd ? '15px 15px' : '25px'}
-        height={`calc(100vh - ${isLesserThanMd ? '150px' : '50px'})`}
+        height={`calc(var(--screenHeight) - ${
+          isLesserThanMd ? '30px' : '50px'
+        })`}
         position="relative"
       >
         <CircularProgress

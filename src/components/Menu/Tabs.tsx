@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { FC } from 'react'
+import { FC, memo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGetDocumentsQuery } from '../../api/documentApiSlice'
 import usePage from '../../hooks/usePage'
@@ -18,22 +18,22 @@ const Tabs: FC = () => {
 
   const tabs = useAppSelector(selectTabs)
 
-  const closeDocument = (tab: types.Tab) => {
-    dispatch(closeTab(tab.tabId))
+  const closeDocument = useCallback((tab: types.Tab) => {
+    dispatch(closeTab(tab.id || tab.tabId))
 
     if (tab.id === id) {
       navigate('/home')
     }
-  }
+  }, [])
 
   return (
     <Box>
       <AddTab />
       {tabs?.map((item) => (
-        <Tab key={item.tabId} onClose={closeDocument} {...item} />
+        <Tab key={item.id || item.tabId} onClose={closeDocument} {...item} />
       ))}
     </Box>
   )
 }
 
-export default Tabs
+export default memo(Tabs)

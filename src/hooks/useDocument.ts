@@ -191,7 +191,6 @@ export const useCreateDocument = () => {
         return data
       } catch (e: any) {
         if (e.status !== 500 && e.status !== 'FETCH_ERROR') {
-          console.log(e)
           dispatch(showAlert('Помилка при створенні документа'))
         }
 

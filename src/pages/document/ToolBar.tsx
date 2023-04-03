@@ -121,6 +121,7 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
         zIndex: '10',
         borderRadius: isLesserThanMd ? '0' : '5px 5px 0 0',
         width: isLesserThanMd ? '100vw' : undefined,
+        justifyContent: 'center',
       }}
     >
       <Box display="flex">
@@ -157,7 +158,7 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
         orientation="vertical"
         sx={{
           width: '1px',
-          height: '44px',
+          height: isLesserThanMd ? '48px' : '44px',
           display: 'block',
           flex: '0 0 1px',
         }}
@@ -182,7 +183,7 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
         orientation="vertical"
         sx={{
           width: '1px',
-          height: '44px',
+          height: isLesserThanMd ? '48px' : '44px',
           display: 'block',
           flex: '0 0 1px',
         }}

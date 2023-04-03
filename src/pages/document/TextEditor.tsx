@@ -131,13 +131,19 @@ const TextEditor: FC<
                 : palette.background.dark,
             borderRadius: '5px',
             padding: '7px 10px 8px',
-            minHeight: 'calc(100vh - 92px)',
+            minHeight: `calc(var(--screenHeight) - ${
+              isLesserThanMd ? '77px' : '50px'
+            })`,
             'div.DraftEditor-root': {
               width: '100%',
-              minHeight: 'calc(100vh - 190px)',
+              minHeight: `calc(var(--screenHeight) - ${
+                isLesserThanMd ? '92px' : '67px'
+              })`,
             },
             'div.DraftEditor-editorContainer, div.public-DraftEditor-content': {
-              minHeight: 'calc(100vh - 190px)',
+              minHeight: `calc(var(--screenHeight) - ${
+                isLesserThanMd ? '92px' : '67px'
+              })`,
               color: palette.primary.main,
             },
           }}
