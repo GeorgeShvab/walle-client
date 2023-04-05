@@ -40,11 +40,7 @@ const tabsSlice = createSlice({
       if (!docIds.includes(action.payload.id)) {
         state.tabs = [...state.tabs, action.payload]
       } else {
-        state.tabs = state.tabs.map((item) => {
-          return item.id === action.payload.id
-            ? { ...item, ...action.payload }
-            : item
-        })
+        state.tabs = state.tabs
       }
     },
     newTab: (state, action: NewTabAction) => {

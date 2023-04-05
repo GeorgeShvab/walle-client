@@ -76,6 +76,7 @@ export interface SettingsRequestBody {
 export interface DialogPropsType extends Document {
   open: boolean
   onClose: () => void
+  onAction?: (arg: string) => void
 }
 
 export type AccessType = 'private' | 'restricted' | 'public'

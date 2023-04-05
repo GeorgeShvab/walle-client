@@ -20,6 +20,7 @@ const ChangeDocumentType: FC<DialogPropsType> = ({
   onClose,
   open,
   type,
+  onAction,
 }) => {
   const [updateDocument, status] = useUpdateDocument()
 
@@ -40,6 +41,10 @@ const ChangeDocumentType: FC<DialogPropsType> = ({
   const handleUpdate = () => {
     updateDocument({ id, type: docType })
   }
+
+  useEffect(() => {
+    if (status.success) onAction && onAction(id)
+  }, [status.success])
 
   return (
     <Dialog

@@ -7,7 +7,7 @@ import { FC, useRef, useState, MouseEvent, memo } from 'react'
 import * as types from '../../../types'
 import DocumentIcon from './DocumentIcon'
 import { Link } from 'react-router-dom'
-import DocumentOptions from './DocumentOptions'
+import DocumentOptions from '../../components/DocumentOptions'
 
 const Document: FC<types.Document> = (props) => {
   const { title, type, id } = props

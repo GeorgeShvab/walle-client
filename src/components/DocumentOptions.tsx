@@ -6,11 +6,11 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
 import LockIcon from '@mui/icons-material/Lock'
-import { Document } from '../../../types'
-import DeleteDocument from '../../components/Dialogs/DeleteDocument'
-import ChangeDocumentAccess from '../../components/Dialogs/ChangeDocumentAccess'
-import RenameDocument from '../../components/Dialogs/RenameDocument'
-import ChangeDocumentType from '../../components/Dialogs/ChangeDocumentType'
+import { Document } from '../../types'
+import DeleteDocument from './Dialogs/DeleteDocument'
+import ChangeDocumentAccess from './Dialogs/ChangeDocumentAccess'
+import RenameDocument from './Dialogs/RenameDocument'
+import ChangeDocumentType from './Dialogs/ChangeDocumentType'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 
@@ -18,6 +18,10 @@ interface PropsType extends Document {
   onClose: () => void
   anchor: RefObject<HTMLElement>
   open: boolean
+  onDelete?: (arg: string) => void
+  onRename?: (arg: string) => void
+  onChangeAccess?: (arg: string) => void
+  onChangeType?: (arg: string) => void
 }
 
 type Action = 'delete' | 'rename' | 'change_type' | 'change_access'
@@ -41,21 +45,25 @@ const DocumentOptions: FC<PropsType> = (props) => {
       <DeleteDocument
         open={action === 'delete'}
         onClose={handleClose}
+        onAction={props.onDelete}
         {...document}
       />
       <ChangeDocumentAccess
         open={action === 'change_access'}
         onClose={handleClose}
+        onAction={props.onChangeAccess}
         {...document}
       />
       <RenameDocument
         open={action === 'rename'}
         onClose={handleClose}
+        onAction={props.onRename}
         {...document}
       />
       <ChangeDocumentType
         open={action === 'change_type'}
         onClose={handleClose}
+        onAction={props.onChangeType}
         {...document}
       />
       <Menu

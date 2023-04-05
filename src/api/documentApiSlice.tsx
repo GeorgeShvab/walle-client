@@ -58,4 +58,5 @@ export const {
   useGetDocumentQuery,
   useUpdateDocumentTextMutation,
   useCreateDocumentMutation,
+  useLazyGetDocumentQuery,
 } = documentApiSlice

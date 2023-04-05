@@ -13,6 +13,7 @@ const useTabs = () => {
   )
 
   useEffect(() => {
+    console.log(data)
     if (data) {
       dispatch(mergeTabs(data))
     }

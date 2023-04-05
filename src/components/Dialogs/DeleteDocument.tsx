@@ -13,9 +13,17 @@ import CircularProgress from '@mui/material/CircularProgress'
 interface PropsTypes extends Document {
   open: boolean
   onClose: () => void
+  onAction?: (arg: string) => void
 }
 
-const DeleteDocument: FC<PropsTypes> = ({ open, onClose, title, id, type }) => {
+const DeleteDocument: FC<PropsTypes> = ({
+  open,
+  onClose,
+  title,
+  id,
+  type,
+  onAction,
+}) => {
   const [deleteDocument, status] = useDeleteDocument()
 
   useEffect(() => {
@@ -27,6 +35,10 @@ const DeleteDocument: FC<PropsTypes> = ({ open, onClose, title, id, type }) => {
   const handleDelete = () => {
     deleteDocument(id)
   }
+
+  useEffect(() => {
+    if (status.success) onAction && onAction(id)
+  }, [status.success])
 
   return (
     <Dialog

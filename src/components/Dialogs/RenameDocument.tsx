@@ -16,6 +16,7 @@ import * as yup from 'yup'
 interface PropsTypes extends Document {
   open: boolean
   onClose: () => void
+  onAction?: (arg: string) => void
 }
 
 interface RenameRequestBody {
@@ -29,7 +30,14 @@ const validationSchema = yup.object().shape({
     .required('Введіть назву'),
 })
 
-const RenameDocument: FC<PropsTypes> = ({ open, onClose, title, id, type }) => {
+const RenameDocument: FC<PropsTypes> = ({
+  open,
+  onClose,
+  title,
+  id,
+  type,
+  onAction,
+}) => {
   const [updateDocument, status] = useUpdateDocument()
 
   useEffect(() => {
@@ -67,6 +75,10 @@ const RenameDocument: FC<PropsTypes> = ({ open, onClose, title, id, type }) => {
       updateDocument({ ...args, type: ext, id }, actions)
     }
   }
+
+  useEffect(() => {
+    if (status.success) onAction && onAction(id)
+  }, [status.success])
 
   const initialValues: RenameRequestBody = {
     title: `${title}.${type}`,

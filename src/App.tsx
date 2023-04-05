@@ -11,6 +11,7 @@ import ErrorAlert from './components/ReduxAlert'
 import useMode from './hooks/useMode'
 import Box from '@mui/material/Box'
 import { useMediaQuery } from '@mui/material'
+import useTabs from './hooks/useTabs'
 
 function App() {
   const { mode, font } = useAppSelector(selectSettings)
@@ -18,6 +19,7 @@ function App() {
   useSettings()
   useGetMe()
   useMode()
+  useTabs()
 
   const theme = useMemo(() => themeSettings(mode, font), [mode, font])
 
