@@ -80,7 +80,7 @@ const TextEditor: FC<
           })
         }
       }
-    }, 7500),
+    }, 3000),
     [id, isLoading]
   )
 

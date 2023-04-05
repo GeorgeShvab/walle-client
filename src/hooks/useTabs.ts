@@ -9,11 +9,14 @@ const useTabs = () => {
   const openedTabs = useAppSelector(selectTabs)
 
   const { data } = useGetDocumentsQuery(
-    'documents=' + openedTabs.map((item) => item.id).join('+')
+    'documents=' +
+      openedTabs
+        .map((item) => item.id)
+        .filter((item) => item)
+        .join('+')
   )
 
   useEffect(() => {
-    console.log(data)
     if (data) {
       dispatch(mergeTabs(data))
     }

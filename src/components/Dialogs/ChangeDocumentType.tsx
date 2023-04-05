@@ -38,6 +38,10 @@ const ChangeDocumentType: FC<DialogPropsType> = ({
     }
   }, [open])
 
+  useEffect(() => {
+    setDocType(type)
+  }, [type])
+
   const handleUpdate = () => {
     updateDocument({ id, type: docType })
   }

@@ -95,7 +95,7 @@ const apiSlice = createApi({
   baseQuery: queryWithRefetch,
   endpoints: () => ({}),
   refetchOnMountOrArgChange: true,
-  tagTypes: ['Documents'],
+  tagTypes: ['Documents', 'Document'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
       return action.payload ? action.payload[reducerPath] : undefined

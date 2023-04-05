@@ -26,12 +26,18 @@ const documentApiSlice = apiSlice.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['Documents'],
+      invalidatesTags: (result, error, args) => {
+        // I think no sense to update all docs if only type or access were changed
+        return args.title || args.type
+          ? ['Documents', { id: args.id, type: 'Document' }]
+          : [{ id: args.id, type: 'Document' }]
+      },
     }),
     getDocument: builder.query<Document, string>({
       query: (id) => ({
         url: '/document/' + id,
       }),
+      providesTags: (result, error, arg) => [{ id: arg, type: 'Document' }],
     }),
     updateDocumentText: builder.mutation<void, DocumentTextUpdationRequestBody>(
       {
@@ -40,6 +46,9 @@ const documentApiSlice = apiSlice.injectEndpoints({
           method: 'PATCH',
           body,
         }),
+        invalidatesTags: (result, error, args) => [
+          { id: args.id, type: 'Document' },
+        ],
       }
     ),
     createDocument: builder.mutation<Document, void>({

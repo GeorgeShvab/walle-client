@@ -32,25 +32,59 @@ const VerticalTab: FC<PropsType> = (props) => {
 
   return (
     <Box
-      sx={
-        document.selected
-          ? {
-              '& + div > a > div > div::before': {
-                display: 'none',
-              },
-            }
-          : {}
-      }
+      className={`tab${document.selected ? ' selected' : ''}`}
+      sx={{
+        //selected styles
+        '&.selected + div .tab-content::before': {
+          opacity: '0',
+        },
+        '&.selected .tab-content': {
+          backgroundColor: palette.background.default,
+          '&::before': {
+            opacity: '0',
+          },
+          '& .remove': {
+            visibility: 'visible',
+          },
+        },
+        '&.selected .tab-corner': {
+          opacity: '1',
+          zIndex: '5',
+          backgroundColor: palette.background.default,
+        },
+        '&.selected': {
+          zIndex: '5',
+        },
+        // animation styles
+        '&.tab-enter': {
+          maxHeight: '0px',
+          opacity: '0',
+        },
+        '&.tab-enter-active': {
+          maxHeight: '60px',
+          opacity: '1',
+          transition: 'max-height ease-out 0.3s, opacity ease-out 0.3s',
+        },
+        '&.tab-exit': {
+          maxHeight: '60px',
+          opacity: '1',
+        },
+        '&.tab-exit-active': {
+          maxHeight: '0px',
+          opacity: '0',
+          transition: 'max-height ease-out 0.3s, opacity ease-out 0.3s',
+        },
+      }}
     >
       <Link to={`/documents/${document.id}`}>
         <Box padding="0 15px 0 0">
           <Box
+            className="tab-content"
             display="flex"
             alignItems="center"
             height="50px"
             padding="0 15px 0 25px"
             position="relative"
-            className={document.selected ? 'selected' : ''}
             onClick={handleClick}
             borderRadius="0 5px 5px 0"
             sx={{
@@ -66,20 +100,11 @@ const VerticalTab: FC<PropsType> = (props) => {
                 width: '95%',
                 height: '1px',
                 top: '0',
-                transition: '0.4s opacity',
-              },
-              '&.selected': {
-                backgroundColor: palette.background.default,
-                '&::before': {
-                  opacity: '0',
-                },
-                '& .remove': {
-                  visibility: 'visible',
-                },
+                transition: '0.3s ease-out opacity',
               },
               width: '100%',
               cursor: 'pointer',
-              transition: '0.4s background',
+              transition: '0.3s ease-out background',
               backgroundColor:
                 palette.mode === 'light'
                   ? palette.grey[100]
@@ -91,6 +116,7 @@ const VerticalTab: FC<PropsType> = (props) => {
               sx={{ marginRight: '12px', height: '25px' }}
             />
             <Typography
+              className="tab-title"
               variant="h6"
               fontSize="medium"
               mr="12px"
@@ -100,29 +126,11 @@ const VerticalTab: FC<PropsType> = (props) => {
               position="relative"
               flex="3 0 74%"
               sx={{
-                '&::before': {
-                  content: `''`,
-                  position: 'absolute',
-                  height: '100%',
-                  width: '10px',
-                  display: 'block',
-                  right: '0',
-                  top: '0',
-                  transition: '0.4s background',
-                  background: document.selected
-                    ? `linear-gradient(90deg, ${
-                        palette.background.default + '00'
-                      } 0%, ${palette.background.default} 100%)`
-                    : `linear-gradient(90deg, ${
-                        (palette.mode === 'light'
-                          ? palette.grey[100]
-                          : palette.background.light) + '00'
-                      } 0%, ${
-                        palette.mode === 'light'
-                          ? palette.grey[100]
-                          : palette.background.light
-                      } 100%)`,
-                },
+                background: `linear-gradient(90deg, ${
+                  palette.primary.main
+                } 80%, ${palette.primary.main + '00'})`,
+                backgroundClip: 'text',
+                textFillColor: 'transparent',
               }}
             >
               {`${document.title}.${document.type}`}
@@ -140,15 +148,16 @@ const VerticalTab: FC<PropsType> = (props) => {
               />
             </IconButton>
             <Box
+              className="tab-corner"
               sx={{
                 width: '5px',
                 height: '5px',
                 position: 'absolute',
                 left: '0',
                 top: '-5px',
-                opacity: document.selected ? '1' : '0',
-                backgroundColor: palette.background.default,
-                transition: '0.4s background',
+                transition: '0.3s ease-out background, 0.3s ease-out opacity',
+                zIndex: '0',
+                opacity: '0',
                 '&::before': {
                   content: `""`,
                   display: 'block',
@@ -159,21 +168,21 @@ const VerticalTab: FC<PropsType> = (props) => {
                   width: '5px',
                   height: '5px',
                   borderRadius: '0 0 0 5px',
-                  transition: '0.4s background',
+                  transition: '0.3s ease-out background, 0.3s ease-out opacity',
                 },
               }}
             />
             <Box
+              className="tab-corner"
               sx={{
                 width: '5px',
                 height: '5px',
                 position: 'absolute',
                 left: '0',
                 bottom: '-5px',
-                opacity: document.selected ? '1' : '0',
-                zIndex: document.selected ? '5' : '1',
-                backgroundColor: palette.background.default,
-                transition: '0.4s background',
+                transition: '0.3s ease-out background, 0.3s ease-out opacity',
+                zIndex: '0',
+                opacity: '0',
                 '&::before': {
                   content: `""`,
                   display: 'block',
@@ -184,7 +193,7 @@ const VerticalTab: FC<PropsType> = (props) => {
                   width: '5px',
                   height: '5px',
                   borderRadius: '5px 0 0 0',
-                  transition: '0.4s background',
+                  transition: '0.3s ease-out background, 0.3s ease-out opacity',
                 },
               }}
             />

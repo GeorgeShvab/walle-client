@@ -14,6 +14,9 @@ import {
   ValidationError,
 } from '../../types'
 import { FormikHelpers } from 'formik'
+import usePage from './usePage'
+import { closeTab } from '../redux/slices/tabs'
+import { useNavigate } from 'react-router-dom'
 
 interface Status {
   error: boolean
@@ -23,6 +26,10 @@ interface Status {
 
 export const useDeleteDocument = () => {
   const dispatch = useAppDispatch()
+
+  const { id: docId } = usePage()
+
+  const navigate = useNavigate()
 
   const [status, setStatus] = useState<Status>({
     error: false,
@@ -42,6 +49,12 @@ export const useDeleteDocument = () => {
         })
 
         await deleteDoc(id).unwrap()
+
+        if (id === docId) {
+          navigate('/home')
+        }
+
+        dispatch(closeTab(id))
 
         setStatus({
           error: false,

@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/store'
 import AddButton from './AddButton'
 import Tab from '../Tab/HorizontalTab'
 import { closeTab, selectTabs } from '../../redux/slices/tabs'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 const Tabs: FC = () => {
   const dispatch = useAppDispatch()
@@ -38,13 +39,16 @@ const Tabs: FC = () => {
     wrapperRef.current?.scrollBy({ left: e.deltaY < 0 ? -30 : 30 })
   }
 
-  const closeDocument = useCallback((tab: types.Tab) => {
-    dispatch(closeTab(tab.id || tab.tabId))
+  const closeDocument = useCallback(
+    (tab: types.Tab) => {
+      dispatch(closeTab(tab.id || tab.tabId))
 
-    if (tab.id === id) {
-      navigate('/home')
-    }
-  }, [])
+      if (tab.id === id) {
+        navigate('/home')
+      }
+    },
+    [id]
+  )
 
   return (
     <Box
@@ -58,6 +62,11 @@ const Tabs: FC = () => {
       width="100%"
       height="100%"
       overflow="hidden"
+      boxShadow={
+        palette.mode === 'light'
+          ? `inset 0 0 1px 0 ${palette.grey[300]}`
+          : undefined
+      }
     >
       <ScrollContainer
         className="scroll-container"
@@ -65,21 +74,26 @@ const Tabs: FC = () => {
         ref={wrapperRef as any}
         style={{ cursor: 'default' }}
       >
-        <Box
-          display="flex"
-          padding="0 16px 0 10px"
-          width="fit-content"
-          sx={{ cursor: 'default' }}
-        >
-          {tabs?.map((item) => (
-            <Tab
-              key={item.id || item.tabId}
-              onClose={closeDocument}
-              selected={id === item.id || !item.id}
-              {...item}
-            />
-          ))}
-          <AddButton />
+        <Box display="flex" width="fit-content" sx={{ cursor: 'default' }}>
+          <TransitionGroup
+            style={{
+              display: 'flex',
+              padding: '0 16px',
+              width: 'fit-content',
+              cursor: 'default',
+            }}
+            component="div"
+          >
+            {tabs?.map((item) => (
+              <CSSTransition key={item.tabId} timeout={300} classNames="tab">
+                <Tab
+                  onClose={closeDocument}
+                  selected={id === item.id || !item.id}
+                  {...item}
+                />
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
         </Box>
       </ScrollContainer>
     </Box>

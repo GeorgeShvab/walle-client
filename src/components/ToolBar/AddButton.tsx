@@ -21,7 +21,7 @@ const AddButton: FC = () => {
       alignItems="center"
       height="42px"
       width="42px"
-      paddingLeft="18px"
+      paddingLeft="14px"
       position="relative"
       sx={{
         '&:first-of-type': {
@@ -36,7 +36,7 @@ const AddButton: FC = () => {
           backgroundColor:
             palette.mode === 'light' ? palette.grey[400] : palette.grey[800],
           display: 'block',
-          left: '0px',
+          left: '4px',
           width: '1px',
           height: '40%',
           top: '50%',

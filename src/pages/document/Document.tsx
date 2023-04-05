@@ -26,7 +26,7 @@ const Document: FC = () => {
 
   const { search } = useLocation()
 
-  const { data, isLoading, error } = useGetDocumentQuery(id || '')
+  const { data, isLoading, error, refetch } = useGetDocumentQuery(id || '')
 
   useEffect(() => {
     const tabId = new URLSearchParams(search).get('tabId')
@@ -46,6 +46,10 @@ const Document: FC = () => {
       }
     }
   }, [id, data, search])
+
+  useEffect(() => {
+    refetch()
+  }, [id])
 
   // used key here because of some bug when setting new state with useEffect. Linkify plugin stops working when I use useEffect
 

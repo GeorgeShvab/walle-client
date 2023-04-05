@@ -39,12 +39,18 @@ const ChangeDocumentAccess: FC<DialogPropsType> = ({
     }
   }, [open])
 
+  useEffect(() => {
+    setAccessType(access)
+  }, [access])
+
   const handleUpdate = () => {
     updateDocument({ access: accessType, id })
   }
 
   useEffect(() => {
-    if (status.success) onAction && onAction(id)
+    if (status.success) {
+      onAction && onAction(id)
+    }
   }, [status.success])
 
   return (

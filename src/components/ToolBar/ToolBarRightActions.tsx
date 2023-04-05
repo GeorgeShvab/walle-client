@@ -70,29 +70,19 @@ const ToolBarRightActions: FC = () => {
   }
 
   useEffect(() => {
-    if (page === 'documents' && id) {
+    if (page === 'documents' && id && id !== 'new') {
       trigger(id, true)
     }
   }, [page, id])
-
-  const handleDeleteDoc = () => {
-    if (id) {
-      dispatch(closeTab(id))
-
-      navigate('/home')
-    }
-  }
 
   if (page === 'documents') {
     return (
       <>
         <ActionsBarWrapper>
           <>
-            {isLesserThanMd && (
-              <IconButton size="small" onClick={handleAdd}>
-                <AddIcon />
-              </IconButton>
-            )}
+            <IconButton size="small" onClick={handleAdd}>
+              <AddIcon />
+            </IconButton>
             <IconButton size="small" onClick={handleDownload}>
               <DownloadIcon />
             </IconButton>
@@ -114,16 +104,17 @@ const ToolBarRightActions: FC = () => {
               anchor={moreIconRef}
               open={showMenu}
               onClose={() => setShowMenu(false)}
-              onDelete={handleDeleteDoc}
               {...data}
             />
           )}
         </Box>
       </>
     )
-  } else if (isLesserThanMd && page === 'home') {
+  } else if (page === 'home') {
     return (
-      <ActionsBarWrapper sx={{ paddingRight: '15px' }}>
+      <ActionsBarWrapper
+        sx={{ paddingRight: isLesserThanMd ? '15px' : undefined }}
+      >
         <IconButton size="small" onClick={handleAdd}>
           <AddIcon />
         </IconButton>

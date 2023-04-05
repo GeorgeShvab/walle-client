@@ -67,18 +67,11 @@ const Document: FC<types.Document> = (props) => {
           whiteSpace="nowrap"
           sx={{
             transform: 'translateX(-50%)',
-            '&::after': {
-              content: `""`,
-              position: 'absolute',
-              display: 'block',
-              right: '0',
-              top: '0',
-              width: '30px',
-              height: '100%',
-              background: `linear-gradient(90deg, ${
-                palette.background.light + '00'
-              } 25%, ${palette.background.light} 100%)`,
-            },
+            background: `linear-gradient(90deg, ${palette.primary.main} 80%, ${
+              palette.primary.main + '00'
+            })`,
+            backgroundClip: 'text',
+            textFillColor: 'transparent',
           }}
         >{`${title}.${type}`}</Typography>
         <Box flex="3 0 auto">
