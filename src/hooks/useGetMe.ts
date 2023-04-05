@@ -1,18 +1,20 @@
 import { useEffect } from 'react'
 import { useAppDispatch } from '../redux/store'
 import { useGetMeQuery } from '../api/userApiSlice'
-import { authorize } from '../redux/slices/user'
+import { authorize, unauthorize } from '../redux/slices/user'
 
 const useGetMe = () => {
   const dispatch = useAppDispatch()
 
-  const { data } = useGetMeQuery()
+  const { data, error } = useGetMeQuery()
 
   useEffect(() => {
     if (data) {
       dispatch(authorize(data))
+    } else if ((error as any)?.status === 401) {
+      dispatch(unauthorize())
     }
-  }, [data])
+  }, [data, error])
 }
 
 export default useGetMe

@@ -16,7 +16,7 @@ const Error: FC<{ sx?: SxProps; title?: string; subtitle?: string }> = ({
       </Typography>
       <Typography>{subtitle}</Typography>
       <Typography>
-        <Link to="/">На головну</Link>
+        <Link to="/home">На головну</Link>
       </Typography>
     </Box>
   )

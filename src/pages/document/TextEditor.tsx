@@ -73,12 +73,10 @@ const TextEditor: FC<
   const updateDoc = useCallback(
     debounce((state: EditorState) => {
       if (!isLoading) {
-        if (owner === currentUser || access === 'public') {
-          update({
-            text: JSON.stringify(convertToRaw(state.getCurrentContent())),
-            id,
-          })
-        }
+        update({
+          text: JSON.stringify(convertToRaw(state.getCurrentContent())),
+          id,
+        })
       }
     }, 3000),
     [id, isLoading]
@@ -177,10 +175,15 @@ const TextEditor: FC<
             keyBindingFn={keyBinding}
             handleKeyCommand={handleKeyCommand}
             plugins={[linkifyPlugin, { decorators: [decorator] }]}
+            readOnly={
+              (currentUser !== owner && access !== 'public') || !currentUser
+            }
           />
         </Box>
       </Box>
-      <ToolBar editorState={editorState} setEditorState={setEditorState} />
+      {(currentUser === owner || (access === 'public' && currentUser)) && (
+        <ToolBar editorState={editorState} setEditorState={setEditorState} />
+      )}
     </Box>
   )
 }

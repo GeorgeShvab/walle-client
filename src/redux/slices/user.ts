@@ -29,10 +29,11 @@ const userSlice = createSlice({
     },
     authorize: (state, action: { payload: User }) => {
       state.data = action.payload
+      state.isLoading = false
     },
     unauthorize: (state) => {
       state.data = null
-      state.isLoading = true
+      state.isLoading = false
     },
   },
 })

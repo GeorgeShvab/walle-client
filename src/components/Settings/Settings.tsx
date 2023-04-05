@@ -13,6 +13,8 @@ import SettingsMenu from './SettingsMenu'
 import AccountSettings from './AccountSettings'
 import InterfaceSettings from './InterfaceSettings'
 import CloseIcon from '@mui/icons-material/Close'
+import { useAppSelector } from '../../redux/store'
+import { selectUser } from '../../redux/slices/user'
 
 interface PropsType {
   open: boolean
@@ -23,6 +25,8 @@ const Settings: FC<PropsType> = ({ open, onClose }) => {
   const { palette, breakpoints } = useTheme()
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
+
+  const user = useAppSelector(selectUser)
 
   const [section, setSection] = useState<SettingsSection>('interface')
 
@@ -54,7 +58,11 @@ const Settings: FC<PropsType> = ({ open, onClose }) => {
                 <Typography variant="h5" mb="15px" pl="25px">
                   Налаштування
                 </Typography>
-                <SettingsMenu section={section} onClick={handleChangeSection} />
+                <SettingsMenu
+                  section={section}
+                  onClick={handleChangeSection}
+                  user={user.data}
+                />
               </Box>
               <Box
                 padding={isLesserThanMd ? '28px 40px 40px' : '28px 40px'}

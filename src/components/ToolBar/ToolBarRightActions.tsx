@@ -13,16 +13,20 @@ import {
   useGetDocumentQuery,
   useLazyGetDocumentQuery,
 } from '../../api/documentApiSlice'
-import { useAppDispatch } from '../../redux/store'
+import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { showAlert } from '../../redux/slices/alert'
 import DocumentOptions from '../DocumentOptions'
 import Box from '@mui/material/Box'
 import { closeTab } from '../../redux/slices/tabs'
+import { selectUser } from '../../redux/slices/user'
+import DocumentInfo from './DocumentInfo'
 
 const ToolBarRightActions: FC = () => {
   const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
+
+  const currentUser = useAppSelector(selectUser)
 
   const { page, id } = usePage()
 
@@ -75,38 +79,42 @@ const ToolBarRightActions: FC = () => {
     }
   }, [page, id])
 
-  if (page === 'documents') {
+  if (page === 'documents' && data) {
     return (
       <>
         <ActionsBarWrapper>
           <>
-            <IconButton size="small" onClick={handleAdd}>
-              <AddIcon />
-            </IconButton>
+            {currentUser.data && (
+              <IconButton size="small" onClick={handleAdd}>
+                <AddIcon />
+              </IconButton>
+            )}
             <IconButton size="small" onClick={handleDownload}>
               <DownloadIcon />
             </IconButton>
-            <IconButton
-              size="small"
-              ref={moreIconRef}
-              onClick={() => setShowMenu(true)}
-            >
-              <MoreVertIcon />
-            </IconButton>
+            {currentUser.data?.id === data.owner ? (
+              <IconButton
+                size="small"
+                ref={moreIconRef}
+                onClick={() => setShowMenu(true)}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            ) : (
+              <DocumentInfo access={data.access} />
+            )}
           </>
         </ActionsBarWrapper>
         <Box
           onClick={(e) => e.stopPropagation()}
           onContextMenu={(e) => e.stopPropagation()}
         >
-          {data && (
-            <DocumentOptions
-              anchor={moreIconRef}
-              open={showMenu}
-              onClose={() => setShowMenu(false)}
-              {...data}
-            />
-          )}
+          <DocumentOptions
+            anchor={moreIconRef}
+            open={showMenu}
+            onClose={() => setShowMenu(false)}
+            {...data}
+          />
         </Box>
       </>
     )

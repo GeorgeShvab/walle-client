@@ -9,20 +9,51 @@ import RegistrationSuccess from './pages/registration/RegistrationSuccess'
 import Verification from './pages/registration/Verification'
 import Document from './pages/document/Document'
 import NewDocument from './pages/document/NewDocument'
+import ProtectRoute from './components/ProtectRoute'
 
 const Router: FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
-      <Route path="/registration" element={<Registration />} />
-      <Route path="/registration/success" element={<RegistrationSuccess />} />
-      <Route path="/registration/verification" element={<Verification />} />
-      <Route path="/login" element={<Login />} />
+      <Route
+        path="/registration"
+        element={
+          <ProtectRoute protectFromAuthorized>
+            <Registration />
+          </ProtectRoute>
+        }
+      />
+      <Route
+        path="/registration/success"
+        element={
+          <ProtectRoute protectFromAuthorized>
+            <RegistrationSuccess />
+          </ProtectRoute>
+        }
+      />
+      <Route
+        path="/registration/verification"
+        element={
+          <ProtectRoute protectFromAuthorized>
+            <Verification />
+          </ProtectRoute>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <ProtectRoute protectFromAuthorized>
+            <Login />
+          </ProtectRoute>
+        }
+      />
       <Route
         path="/home"
         element={
           <Layout>
-            <Home />
+            <ProtectRoute>
+              <Home />
+            </ProtectRoute>
           </Layout>
         }
       />
@@ -38,7 +69,9 @@ const Router: FC = () => {
         path="/documents/new"
         element={
           <Layout>
-            <NewDocument />
+            <ProtectRoute>
+              <NewDocument />
+            </ProtectRoute>
           </Layout>
         }
       />

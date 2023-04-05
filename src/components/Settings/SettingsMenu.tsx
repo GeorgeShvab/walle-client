@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { SettingsSection } from '../../../types'
+import { SettingsSection, User } from '../../../types'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -11,9 +11,10 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 interface PropsType {
   section: SettingsSection
   onClick: (arg: SettingsSection) => void
+  user: User | null
 }
 
-const SettingsMenu: FC<PropsType> = ({ section, onClick }) => {
+const SettingsMenu: FC<PropsType> = ({ section, onClick, user }) => {
   return (
     <List>
       <ListItemButton
@@ -23,34 +24,12 @@ const SettingsMenu: FC<PropsType> = ({ section, onClick }) => {
           '&.Mui-selected': {
             background: 'none',
             position: 'relative',
-            /*'&::after': {
-              opacity: '1 !important',
-            },*/
             opacity: '1',
           },
           '&:hover': {
             backgroundColor: 'transparent ! important',
-            /*'&::after': {
-              opacity: '0.5',
-            },*/
             opacity: '1',
           },
-          /*'&::after': { // old hover effect
-            position: 'absolute',
-            right: '0',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            content: `""`,
-            height: '25%',
-            width: '4px',
-            backgroundColor:
-              mode === 'light'
-                ? lightThemeTokens.primary.main
-                : darkThemeTokens.primary.main,
-            borderRadius: '2px 2px 2px 2px',
-            opacity: '0',
-            transition: '0.15s opacity',
-          },*/
           paddingLeft: '25px',
           '& > div:first-of-type': {
             minWidth: '46px',
@@ -64,54 +43,34 @@ const SettingsMenu: FC<PropsType> = ({ section, onClick }) => {
         </ListItemIcon>
         <ListItemText primary="Інтерфейс" />
       </ListItemButton>
-      <ListItemButton
-        selected={section === 'account'}
-        onClick={() => onClick('account')}
-        sx={{
-          '&.Mui-selected': {
-            background: 'none',
-            position: 'relative',
-            /*'&::after': {
-              opacity: '1 !important',
-            },*/
-            opacity: '1',
-          },
-          '&:hover': {
-            backgroundColor: 'transparent ! important',
-            /*'&::after': {
-              opacity: '0.5',
-            },*/
-            opacity: '1',
-          },
-          /*'&::after': { // old hover effect
-            position: 'absolute',
-            right: '0',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            content: `""`,
-            height: '25%',
-            width: '4px',
-            backgroundColor:
-              mode === 'light'
-                ? lightThemeTokens.primary.main
-                : darkThemeTokens.primary.main,
-            borderRadius: '2px 2px 2px 2px',
-            opacity: '0',
-            transition: '0.15s opacity',
-          },*/
-          paddingLeft: '25px',
-          '& > div:first-of-type': {
-            minWidth: '46px',
-          },
-          opacity: '0.35',
-          transition: '0.25s opacity',
-        }}
-      >
-        <ListItemIcon>
-          <ManageAccountsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Аккаунт" />
-      </ListItemButton>
+      {user && (
+        <ListItemButton
+          selected={section === 'account'}
+          onClick={() => onClick('account')}
+          sx={{
+            '&.Mui-selected': {
+              background: 'none',
+              position: 'relative',
+              opacity: '1',
+            },
+            '&:hover': {
+              backgroundColor: 'transparent ! important',
+              opacity: '1',
+            },
+            paddingLeft: '25px',
+            '& > div:first-of-type': {
+              minWidth: '46px',
+            },
+            opacity: '0.35',
+            transition: '0.25s opacity',
+          }}
+        >
+          <ListItemIcon>
+            <ManageAccountsIcon />
+          </ListItemIcon>
+          <ListItemText primary="Аккаунт" />
+        </ListItemButton>
+      )}
     </List>
   )
 }

@@ -6,9 +6,13 @@ import ActionsBarWrapper from './ActionsBarWrapper'
 import { Link } from 'react-router-dom'
 import { SxProps } from '@mui/material/styles'
 import Settings from '../Settings/Settings'
+import { useAppSelector } from '../../redux/store'
+import { selectUser } from '../../redux/slices/user'
 
 const ToolBarLeftActions: FC<{ sx?: SxProps }> = ({ sx }) => {
   const [settinsgOpen, setSettingsOpen] = useState<boolean>(false)
+
+  const currentUser = useAppSelector(selectUser)
 
   const toggleSettings = () => {
     setSettingsOpen((prev) => !prev)
@@ -17,11 +21,13 @@ const ToolBarLeftActions: FC<{ sx?: SxProps }> = ({ sx }) => {
   return (
     <ActionsBarWrapper sx={sx}>
       <>
-        <Link to="/home">
-          <IconButton size="small">
-            <HomeIcon />
-          </IconButton>
-        </Link>
+        {currentUser.data && (
+          <Link to="/home">
+            <IconButton size="small">
+              <HomeIcon />
+            </IconButton>
+          </Link>
+        )}
         <IconButton size="small" onClick={toggleSettings}>
           <SettingsIcon />
         </IconButton>
