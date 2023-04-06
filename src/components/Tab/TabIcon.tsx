@@ -21,7 +21,7 @@ const TabIcon: FC<{ type: DocumentType; sx?: SxProps }> = ({ type, sx }) => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_97_1484)">
+            <g clipPath="url(#clip0_97_1484)">
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -96,7 +96,7 @@ const TabIcon: FC<{ type: DocumentType; sx?: SxProps }> = ({ type, sx }) => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_97_1478)">
+            <g clipPath="url(#clip0_97_1478)">
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -178,7 +178,7 @@ const TabIcon: FC<{ type: DocumentType; sx?: SxProps }> = ({ type, sx }) => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_97_1489)">
+            <g clipPath="url(#clip0_97_1489)">
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"

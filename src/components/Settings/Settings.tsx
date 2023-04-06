@@ -96,9 +96,7 @@ const Settings: FC<PropsType> = ({ open, onClose }) => {
                   },
                   '&::-webkit-scrollbar-thumb': {
                     backgroundColor:
-                      palette.mode === 'light'
-                        ? palette.grey[300]
-                        : palette.background.light,
+                      palette.mode === 'light' ? palette.grey[300] : '#1b1b1b',
                   },
                 }}
               >

@@ -195,17 +195,21 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
         <Popover
           open={Boolean(linkPopoverEl)}
           anchorEl={linkPopoverEl}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
+          anchorReference="anchorPosition"
+          anchorPosition={{
+            top: window.innerHeight - 150,
+            left: window.innerWidth / 2,
           }}
           onClose={() => setLinkPopoverEl(undefined)}
+          PaperProps={{
+            style: {
+              transform: isLesserThanMd ? undefined : 'translateX(-50%)',
+              width: '100%',
+              maxWidth: isLesserThanMd ? 'calc(100vw - 30px)' : '400px',
+            },
+          }}
         >
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
             <Box padding="10px" display="block" gap="105px">
               <Box mb="10px">
                 <TextField
@@ -215,6 +219,7 @@ const ToolBar: FC<PropsType> = ({ editorState, setEditorState }) => {
                   placeholder="https://example.com"
                   name="url"
                   inputRef={inputRef}
+                  fullWidth
                 />
               </Box>
               <Button type="submit" fullWidth>

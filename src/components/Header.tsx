@@ -17,7 +17,7 @@ const Header: FC<{ link?: boolean }> = ({ link }) => {
       <Typography variant="h5" fontWeight="800">
         {link ? (
           <Link to="/" style={{ color: palette.primary.main }}>
-            Walle
+            WallE
           </Link>
         ) : (
           'WallE'

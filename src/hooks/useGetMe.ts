@@ -1,14 +1,23 @@
 import { useEffect } from 'react'
 import { useAppDispatch } from '../redux/store'
-import { useGetMeQuery } from '../api/userApiSlice'
+import { useLazyGetMeQuery } from '../api/userApiSlice'
 import { authorize, unauthorize } from '../redux/slices/user'
+import getLocalValue from '../utils/getLocalValue'
 
 const useGetMe = () => {
   const dispatch = useAppDispatch()
 
-  const { data, error } = useGetMeQuery()
+  const [trigger, { data, error }] = useLazyGetMeQuery()
 
   useEffect(() => {
+    const accessToken = getLocalValue('AccessToken')
+
+    if (accessToken) {
+      trigger()
+    } else {
+      dispatch(unauthorize())
+    }
+
     if (data) {
       dispatch(authorize(data))
     } else if ((error as any)?.status === 401) {

@@ -7,6 +7,7 @@ const userApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: '/user/me',
       }),
+      providesTags: ['User'],
     }),
     updatePassword: builder.mutation<void, PasswordUpdationArgs>({
       query: (body) => ({
@@ -29,4 +30,5 @@ export const {
   useUpdatePasswordMutation,
   useUpdateSettingsMutation,
   useGetMeQuery,
+  useLazyGetMeQuery,
 } = userApiSlice

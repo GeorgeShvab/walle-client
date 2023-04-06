@@ -5,13 +5,17 @@ import Typography from '@mui/material/Typography'
 import useTheme from '@mui/material/styles/useTheme'
 import AddIcon from '@mui/icons-material/Add'
 import { useNavigate } from 'react-router-dom'
+import usePage from '../../hooks/usePage'
 
 const AddTab: FC = () => {
   const { palette } = useTheme()
 
+  const { id } = usePage()
+
   const navigate = useNavigate()
 
   const handleClick = () => {
+    if (id === 'new') return
     navigate('/documents/new')
   }
 

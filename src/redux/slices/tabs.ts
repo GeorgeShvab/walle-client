@@ -44,7 +44,7 @@ const tabsSlice = createSlice({
       }
     },
     newTab: (state, action: NewTabAction) => {
-      state.tabs = [...state.tabs.map((item) => ({ ...item })), action.payload]
+      state.tabs = [...state.tabs.filter((item) => item.id), action.payload]
     },
     mergeTab: (state, action: MergeTabAction) => {
       state.tabs = state.tabs.map((item) =>

@@ -19,7 +19,7 @@ import tabs from './slices/tabs'
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['alert'],
+  blacklist: ['alert', 'store.data.isLoading'],
 }
 
 const persistedReducer = persistReducer(

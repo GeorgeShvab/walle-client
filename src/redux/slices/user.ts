@@ -38,6 +38,7 @@ const userSlice = createSlice({
       state.isLoading = false
 
       window.localStorage.clear()
+      window.localStorage.removeItem('persist:root')
     },
   },
 })

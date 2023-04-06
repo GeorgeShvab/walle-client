@@ -9,17 +9,14 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import AddIcon from '@mui/icons-material/Add'
 import { useNavigate } from 'react-router-dom'
 import getLocalValue from '../../utils/getLocalValue'
-import {
-  useGetDocumentQuery,
-  useLazyGetDocumentQuery,
-} from '../../api/documentApiSlice'
+import { useLazyGetDocumentQuery } from '../../api/documentApiSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { showAlert } from '../../redux/slices/alert'
 import DocumentOptions from '../DocumentOptions'
 import Box from '@mui/material/Box'
-import { closeTab } from '../../redux/slices/tabs'
 import { selectUser } from '../../redux/slices/user'
 import DocumentInfo from './DocumentInfo'
+import InsertLinkIcon from '@mui/icons-material/InsertLink'
 
 const ToolBarRightActions: FC = () => {
   const dispatch = useAppDispatch()
@@ -37,6 +34,7 @@ const ToolBarRightActions: FC = () => {
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
   const handleAdd = () => {
+    if (id === 'new') return
     navigate('/documents/new')
   }
 
@@ -79,6 +77,12 @@ const ToolBarRightActions: FC = () => {
     }
   }, [page, id])
 
+  const handleCopyClick = () => {
+    try {
+      navigator.clipboard.writeText(document.location.href)
+    } catch (e) {}
+  }
+
   if (page === 'documents' && data) {
     return (
       <>
@@ -89,8 +93,12 @@ const ToolBarRightActions: FC = () => {
                 <AddIcon />
               </IconButton>
             )}
+
             <IconButton size="small" onClick={handleDownload}>
               <DownloadIcon />
+            </IconButton>
+            <IconButton size="small" onClick={handleCopyClick}>
+              <InsertLinkIcon />
             </IconButton>
             {currentUser.data?.id === data.owner ? (
               <IconButton

@@ -73,10 +73,12 @@ const TextEditor: FC<
   const updateDoc = useCallback(
     debounce((state: EditorState) => {
       if (!isLoading) {
-        update({
-          text: JSON.stringify(convertToRaw(state.getCurrentContent())),
-          id,
-        })
+        if (currentUser === owner || (currentUser && access === 'restricted')) {
+          update({
+            text: JSON.stringify(convertToRaw(state.getCurrentContent())),
+            id,
+          })
+        }
       }
     }, 3000),
     [id, isLoading]
