@@ -30,10 +30,14 @@ const userSlice = createSlice({
     authorize: (state, action: { payload: User }) => {
       state.data = action.payload
       state.isLoading = false
+
+      setLocalValue('user_id', action.payload.id)
     },
     unauthorize: (state) => {
       state.data = null
       state.isLoading = false
+
+      window.localStorage.clear()
     },
   },
 })

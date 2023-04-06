@@ -67,6 +67,8 @@ const Login: FC = () => {
           onSubmit={handleSubmit}
           initialValues={initialValues}
           validationSchema={validationSchema}
+          validateOnBlur={false}
+          validateOnChange={false}
         >
           {({
             values,
