@@ -1,4 +1,3 @@
-import './App.css'
 import Router from './Router'
 import ThemeProvider from '@mui/material/styles/ThemeProvider'
 import { themeSettings } from './theme'
@@ -10,7 +9,7 @@ import useGetMe from './hooks/useGetMe'
 import ErrorAlert from './components/ReduxAlert'
 import useMode from './hooks/useMode'
 import Box from '@mui/material/Box'
-import { useMediaQuery } from '@mui/material'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import useTabs from './hooks/useTabs'
 
 function App() {

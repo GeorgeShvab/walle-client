@@ -1,4 +1,6 @@
-import { CircularProgress, useMediaQuery, useTheme } from '@mui/material'
+import useTheme from '@mui/material/styles/useTheme'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import { FC, useEffect } from 'react'
 import { useCreateDocument } from '../../hooks/useDocument'

@@ -1,4 +1,6 @@
-import { IconButton, useMediaQuery, useTheme } from '@mui/material'
+import useTheme from '@mui/material/styles/useTheme'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import IconButton from '@mui/material/IconButton'
 import { FC, useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
 import Menu from '../Menu/Menu'

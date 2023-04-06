@@ -143,23 +143,6 @@ export const themeSettings = (mode: Mode = 'light', font: Font = 'Rubik') => {
       MuiListItemButton: {
         defaultProps: {
           disableRipple: true,
-          /*sx: {
-            '&.Mui-selected': {
-              background: 'none',
-              position: 'relative',
-              opacity: '1',
-            },
-            '&:hover': {
-              backgroundColor: 'transparent ! important',
-              opacity: '1',
-            },
-            paddingLeft: '25px',
-            '& > div:first-of-type': {
-              minWidth: '46px',
-            },
-            opacity: '0.35',
-            transition: '0.25s opacity',
-          },*/
         },
       },
     },

@@ -1,4 +1,6 @@
-import { IconButton, Popover, Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
+import Popover from '@mui/material/Popover'
+import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
 import { FC, useRef, useState } from 'react'
 import InfoIcon from '@mui/icons-material/Info'

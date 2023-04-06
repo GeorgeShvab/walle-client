@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import { FC } from 'react'
 import SettingsItemHeader from './SettingsItemHeader'
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
 
 const Info: FC = () => {
   return (

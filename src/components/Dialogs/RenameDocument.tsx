@@ -10,7 +10,7 @@ import { Document, DocumentType } from '../../../types'
 import { useUpdateDocument } from '../../hooks/useDocument'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Formik, FormikHelpers } from 'formik'
-import { TextField } from '@mui/material'
+import TextField from '@mui/material/TextField'
 import * as yup from 'yup'
 
 interface PropsTypes extends Document {

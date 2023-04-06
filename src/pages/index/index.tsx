@@ -6,7 +6,7 @@ import useTheme from '@mui/material/styles/useTheme'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { Link } from 'react-router-dom'
-import { useMediaQuery } from '@mui/material'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const Index: FC = () => {
   const { palette, breakpoints } = useTheme()
@@ -19,7 +19,7 @@ const Index: FC = () => {
         <Box className="container">
           <Header />
           <Box
-            padding={isLesserThanMd ? '75px 0 50px 0' : '100px 0 50px 0'}
+            padding={isLesserThanMd ? '75px 0 20px 0' : '100px 0 30px 0'}
             maxWidth={isLesserThanMd ? 'unset' : '500px'}
             display="flex"
             flexDirection="column"

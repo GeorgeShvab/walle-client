@@ -1,6 +1,5 @@
 import { Action, createSlice } from '@reduxjs/toolkit'
 import { Document, Tab } from '../../../types'
-import { ListItem } from '@mui/material'
 
 interface TabsState {
   tabs: Tab[]

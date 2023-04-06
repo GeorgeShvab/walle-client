@@ -9,9 +9,7 @@ const ProtectRoute: FC<{
 }> = ({ children, protectFromAuthorized = false }) => {
   const user = useAppSelector(selectUser)
 
-  console.log(user.isLoading, user.data)
   if (!user.isLoading && !user.data && !protectFromAuthorized) {
-    console.log('heheh')
     return <Navigate to="/login" />
   } else if (!user.isLoading && user.data && protectFromAuthorized) {
     return <Navigate to="/home" />
