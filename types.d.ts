@@ -65,7 +65,7 @@ export interface Document {
   updatedAt: string
 }
 
-export type SettingsSection = 'account' | 'interface'
+export type SettingsSection = 'account' | 'interface' | 'info'
 
 export interface SettingsRequestBody {
   mode?: Mode
