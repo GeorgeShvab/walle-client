@@ -1,29 +1,32 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppDispatch } from '../redux/store'
-import { useLazyGetMeQuery } from '../api/userApiSlice'
-import { authorize, unauthorize } from '../redux/slices/user'
+import { useGetMeQuery } from '../api/userApiSlice'
 import getLocalValue from '../utils/getLocalValue'
 
 const useGetMe = () => {
-  const dispatch = useAppDispatch()
+  const [refreshToken, setRefreshToken] = useState<string | undefined>(
+    getLocalValue('RefreshToken')
+  )
 
-  const [trigger, { data, error }] = useLazyGetMeQuery()
+  const { data, refetch } = useGetMeQuery()
+
+  const handleStorageChange = () => {
+    const token = getLocalValue('RefreshToken')
+
+    if (token && token !== refreshToken && !data) {
+      setRefreshToken(token)
+
+      refetch()
+    }
+  }
 
   useEffect(() => {
-    const accessToken = getLocalValue('AccessToken')
+    window.addEventListener('storage', handleStorageChange)
 
-    if (accessToken) {
-      trigger()
-    } else {
-      dispatch(unauthorize())
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
     }
-
-    if (data) {
-      dispatch(authorize(data))
-    } else if ((error as any)?.status === 401) {
-      dispatch(unauthorize())
-    }
-  }, [data, error])
+  }, [])
 }
 
 export default useGetMe

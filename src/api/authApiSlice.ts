@@ -1,10 +1,4 @@
-import {
-  AuthResponse,
-  LoginArgs,
-  PasswordUpdationArgs,
-  RegistrationArgs,
-  User,
-} from '../../types'
+import { AuthResponse, LoginArgs, RegistrationArgs } from '../../types'
 import getLocalValue from '../utils/getLocalValue'
 import apiSlice from './apiSlice'
 
@@ -47,6 +41,7 @@ const authApiSlice = apiSlice.injectEndpoints({
           body: { refreshToken: getLocalValue('RefreshToken') },
         }
       },
+      invalidatesTags: ['User', 'Document', 'Documents'],
     }),
   }),
 })

@@ -1,24 +1,24 @@
 import { useEffect } from 'react'
-import { selectUser } from '../redux/slices/user'
-import { useAppDispatch, useAppSelector } from '../redux/store'
+import { useAppDispatch } from '../redux/store'
 import { setSettings } from '../redux/slices/settings'
+import { useGetMeQuery } from '../api/userApiSlice'
 
 const useSettings = () => {
   const dispatch = useAppDispatch()
 
-  const user = useAppSelector(selectUser)
+  const { data } = useGetMeQuery()
 
   useEffect(() => {
-    if (user.data) {
+    if (data) {
       dispatch(
         setSettings({
-          mode: user.data.mode,
-          font: user.data.font,
-          color: user.data.color,
+          mode: data.mode,
+          font: data.font,
+          color: data.color,
         })
       )
     }
-  }, [user.data])
+  }, [data])
 }
 
 export default useSettings

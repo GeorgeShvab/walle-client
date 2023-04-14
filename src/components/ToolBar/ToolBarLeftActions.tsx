@@ -8,11 +8,12 @@ import { SxProps } from '@mui/material/styles'
 import Settings from '../Settings/Settings'
 import { useAppSelector } from '../../redux/store'
 import { selectUser } from '../../redux/slices/user'
+import { useGetMeQuery } from '../../api/userApiSlice'
 
 const ToolBarLeftActions: FC<{ sx?: SxProps }> = ({ sx }) => {
   const [settinsgOpen, setSettingsOpen] = useState<boolean>(false)
 
-  const currentUser = useAppSelector(selectUser)
+  const { data } = useGetMeQuery()
 
   const toggleSettings = () => {
     setSettingsOpen((prev) => !prev)
@@ -21,7 +22,7 @@ const ToolBarLeftActions: FC<{ sx?: SxProps }> = ({ sx }) => {
   return (
     <ActionsBarWrapper sx={sx}>
       <>
-        {currentUser.data && (
+        {data && (
           <Link to="/home">
             <IconButton size="small">
               <HomeIcon />

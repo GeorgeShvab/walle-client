@@ -1,11 +1,11 @@
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google'
 import { useGoogleAuthMutation } from '../api/authApiSlice'
 import { useAppDispatch } from '../redux/store'
-import setLocalValue from '../utils/setLocalBalue'
-import { setUser } from '../redux/slices/user'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { showAlert } from '../redux/slices/alert'
+import { useLazyGetMeQuery } from '../api/userApiSlice'
+import asyncLocalStorageSet from '../utils/asyncLocalStorageSet'
+import apiSlice from '../api/apiSlice'
 
 type SuccessResponse = Omit<
   TokenResponse,
@@ -20,6 +20,8 @@ type ErrorResponse = Pick<
 const useGoogleAuthorization = () => {
   const dispatch = useAppDispatch()
 
+  const [trigger] = useLazyGetMeQuery()
+
   const navigate = useNavigate()
 
   const [googleAuth] = useGoogleAuthMutation()
@@ -28,7 +30,14 @@ const useGoogleAuthorization = () => {
     try {
       const data = await googleAuth(response.access_token).unwrap()
 
-      dispatch(setUser(data))
+      apiSlice.util.invalidateTags(['Document', 'Documents'])
+
+      await Promise.all([
+        (asyncLocalStorageSet('AccessToken', data.accessToken),
+        asyncLocalStorageSet('RefreshToken', data.refreshToken)),
+      ])
+
+      await trigger()
 
       navigate('/home')
     } catch (e) {

@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../redux/store'
+import { Link, useLocation, useParams } from 'react-router-dom'
+import { useAppDispatch } from '../../redux/store'
 import 'draft-js/dist/Draft.css'
 import TextEditor from './TextEditor'
 import { useGetDocumentQuery } from '../../api/documentApiSlice'
@@ -8,15 +8,16 @@ import Box from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import generateId from '../../utils/generateId'
 import useTheme from '@mui/material/styles/useTheme'
-import { selectUser } from '../../redux/slices/user'
 import Error from '../../components/Error'
 import CircularProgress from '@mui/material/CircularProgress'
 import { mergeTab, openTab } from '../../redux/slices/tabs'
+import { useGetMeQuery } from '../../api/userApiSlice'
+import Button from '@mui/material/Button'
 
 const Document: FC = () => {
   const dispatch = useAppDispatch()
 
-  const user = useAppSelector(selectUser)
+  const { data: user } = useGetMeQuery()
 
   const { breakpoints } = useTheme()
 
@@ -66,6 +67,18 @@ const Document: FC = () => {
             }}
             title={(error as any)?.status || '500'}
             subtitle={(error as any)?.data?.msg || "Помилка з'єднання"}
+            subElement={
+              (error as any)?.status === 401 ? (
+                <Box padding="30px">
+                  <Link
+                    to="/login"
+                    state={{ referrer: window.location.pathname }}
+                  >
+                    <Button variant="contained">Вхід</Button>
+                  </Link>
+                </Box>
+              ) : undefined
+            }
           />
         </Box>
       </Box>
@@ -97,7 +110,7 @@ const Document: FC = () => {
             {...data}
             isLoading={isLoading}
             key={data.text}
-            currentUser={user.data?.id}
+            currentUser={user?.id}
           />
         )
       )}

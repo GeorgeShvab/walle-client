@@ -1,11 +1,15 @@
 import { PasswordUpdationArgs, SettingsRequestBody, User } from '../../types'
+import getLocalValue from '../utils/getLocalValue'
 import apiSlice from './apiSlice'
 
 const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getMe: builder.query<User, void>({
+    getMe: builder.query<User, void | string>({
       query: () => ({
         url: '/user/me',
+        headers: {
+          authorization: getLocalValue('AccessToken'),
+        },
       }),
       providesTags: ['User'],
     }),
@@ -25,6 +29,8 @@ const userApiSlice = apiSlice.injectEndpoints({
     }),
   }),
 })
+
+export default userApiSlice
 
 export const {
   useUpdatePasswordMutation,

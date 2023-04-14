@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { AnyAction, combineReducers, configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import apiSlice from '../api/apiSlice'
 import user from './slices/user'
@@ -16,25 +16,35 @@ import settings from './slices/settings'
 import alert from './slices/alert'
 import tabs from './slices/tabs'
 
-const persistConfig = {
+export const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['alert', 'store.data.isLoading'],
+  blacklist: ['alert'],
+  throttle: 50,
 }
 
 const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
-    [apiSlice.reducerPath]: apiSlice.reducer,
     user,
     settings,
     alert,
     tabs,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   })
 )
 
+export const removePersistStore = persistConfig.storage.removeItem
+
+function rootReducer(state: any, action: AnyAction) {
+  if (action.type === 'RESET') {
+    state = undefined
+  }
+  return persistedReducer(state, action)
+}
+
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

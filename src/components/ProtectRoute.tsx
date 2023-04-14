@@ -1,17 +1,19 @@
 import { FC, ReactElement } from 'react'
-import { useAppSelector } from '../redux/store'
-import { selectUser } from '../redux/slices/user'
 import { Navigate } from 'react-router-dom'
+import { useGetMeQuery } from '../api/userApiSlice'
 
 const ProtectRoute: FC<{
   children: ReactElement
   protectFromAuthorized?: boolean
 }> = ({ children, protectFromAuthorized = false }) => {
-  const user = useAppSelector(selectUser)
+  const { data, isLoading, error } = useGetMeQuery()
 
-  if (!user.isLoading && !user.data && !protectFromAuthorized) {
+  if (
+    (!isLoading && !data && !protectFromAuthorized) ||
+    (!protectFromAuthorized && (error as any)?.status === 401)
+  ) {
     return <Navigate to="/login" />
-  } else if (!user.isLoading && user.data && protectFromAuthorized) {
+  } else if (!isLoading && data && protectFromAuthorized) {
     return <Navigate to="/home" />
   }
 

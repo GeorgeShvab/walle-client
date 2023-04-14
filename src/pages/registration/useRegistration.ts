@@ -1,12 +1,9 @@
-import { useState } from 'react'
 import { useRegistrationMutation } from '../../api/authApiSlice'
-import { useAppDispatch } from '../../redux/store'
 import {
   FailedResponse,
   RegistrationArgs,
   ValidationError,
 } from '../../../types'
-import { setUser } from '../../redux/slices/user'
 import { useNavigate } from 'react-router-dom'
 import { FormikHelpers } from 'formik'
 

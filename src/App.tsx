@@ -5,7 +5,6 @@ import { useAppSelector } from './redux/store'
 import { useMemo } from 'react'
 import useSettings from './hooks/useSettings'
 import { selectSettings } from './redux/slices/settings'
-import useGetMe from './hooks/useGetMe'
 import ErrorAlert from './components/ReduxAlert'
 import useMode from './hooks/useMode'
 import Box from '@mui/material/Box'
@@ -16,7 +15,6 @@ function App() {
   const { mode, font } = useAppSelector(selectSettings)
 
   useSettings()
-  useGetMe()
   useMode()
   useTabs()
 

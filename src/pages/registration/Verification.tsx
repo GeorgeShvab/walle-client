@@ -1,5 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react'
-import Header from '../../components/Header'
+import { FC, useEffect, useMemo } from 'react'
 import Box from '@mui/material/Box'
 import useTheme from '@mui/material/styles/useTheme'
 import Paper from '@mui/material/Paper'
@@ -7,7 +6,6 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import Alert from '../../components/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import useVerification from './useVerification'
 import CenterContentPageWrapper from '../../components/CenterContentPageWrapper'
@@ -17,7 +15,7 @@ const Verification: FC = () => {
 
   const navigate = useNavigate()
 
-  const isLesserThamMd = useMediaQuery(breakpoints.down('md'))
+  const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
   const { search } = useLocation()
 
@@ -32,7 +30,7 @@ const Verification: FC = () => {
     if (success) {
       setTimeout(() => {
         navigate('/home')
-      }, 15000)
+      }, 10000)
     }
   }, [success])
 
@@ -41,9 +39,9 @@ const Verification: FC = () => {
       <Paper
         elevation={2}
         sx={{
-          padding: isLesserThamMd ? '35px 30px' : '35px 40px',
+          padding: isLesserThanMd ? '35px 30px' : '35px 40px',
           width: '100%',
-          mmaxWidth: isLesserThamMd ? '100%' : '400px',
+          maxWidth: isLesserThanMd ? '100%' : '400px',
         }}
       >
         {success || error ? (
@@ -54,7 +52,7 @@ const Verification: FC = () => {
               textAlign="center"
               mb="30px"
             >
-              {success ? 'Аккаунт підтверджено' : 'Помилка'}
+              {success ? 'Адресу підтверджено' : 'Помилка'}
             </Typography>
             <Typography
               textAlign="center"

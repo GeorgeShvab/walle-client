@@ -31,14 +31,7 @@ const Router: FC = () => {
           </ProtectRoute>
         }
       />
-      <Route
-        path="/registration/verification"
-        element={
-          <ProtectRoute protectFromAuthorized>
-            <Verification />
-          </ProtectRoute>
-        }
-      />
+      <Route path="/registration/verification" element={<Verification />} />
       <Route
         path="/login"
         element={

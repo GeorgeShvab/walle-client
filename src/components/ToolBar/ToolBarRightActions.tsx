@@ -10,20 +10,20 @@ import AddIcon from '@mui/icons-material/Add'
 import { useNavigate } from 'react-router-dom'
 import getLocalValue from '../../utils/getLocalValue'
 import { useLazyGetDocumentQuery } from '../../api/documentApiSlice'
-import { useAppDispatch, useAppSelector } from '../../redux/store'
+import { useAppDispatch } from '../../redux/store'
 import { showAlert } from '../../redux/slices/alert'
 import DocumentOptions from '../DocumentOptions'
 import Box from '@mui/material/Box'
-import { selectUser } from '../../redux/slices/user'
 import DocumentInfo from './DocumentInfo'
 import InsertLinkIcon from '@mui/icons-material/InsertLink'
+import { useGetMeQuery } from '../../api/userApiSlice'
 
 const ToolBarRightActions: FC = () => {
   const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
 
-  const currentUser = useAppSelector(selectUser)
+  const { data: user } = useGetMeQuery()
 
   const { page, id } = usePage()
 
@@ -88,7 +88,7 @@ const ToolBarRightActions: FC = () => {
       <>
         <ActionsBarWrapper>
           <>
-            {currentUser.data && (
+            {user && (
               <IconButton size="small" onClick={handleAdd}>
                 <AddIcon />
               </IconButton>
@@ -100,7 +100,7 @@ const ToolBarRightActions: FC = () => {
             <IconButton size="small" onClick={handleCopyClick}>
               <InsertLinkIcon />
             </IconButton>
-            {currentUser.data?.id === data.owner ? (
+            {user?.id === data.owner ? (
               <IconButton
                 size="small"
                 ref={moreIconRef}

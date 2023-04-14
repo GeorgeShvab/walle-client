@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useAppSelector } from '../../redux/store'
 import { selectUser } from '../../redux/slices/user'
 import Info from './Info'
+import { useGetMeQuery } from '../../api/userApiSlice'
 
 interface PropsType {
   open: boolean
@@ -27,7 +28,7 @@ const Settings: FC<PropsType> = ({ open, onClose }) => {
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
-  const user = useAppSelector(selectUser)
+  const { data } = useGetMeQuery()
 
   const [section, setSection] = useState<SettingsSection>('interface')
 
@@ -74,7 +75,7 @@ const Settings: FC<PropsType> = ({ open, onClose }) => {
                 <SettingsMenu
                   section={section}
                   onClick={handleChangeSection}
-                  user={user.data}
+                  user={data}
                 />
               </Box>
               <Box

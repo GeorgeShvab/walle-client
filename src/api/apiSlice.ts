@@ -7,9 +7,7 @@ import {
 } from '@reduxjs/toolkit/query/react'
 import getLocalValue from '../utils/getLocalValue'
 import setLocalValue from '../utils/setLocalBalue'
-import { MaybePromise } from '@reduxjs/toolkit/dist/query/tsHelpers'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
-import { unauthorize } from '../redux/slices/user'
 import { Mutex } from 'async-mutex'
 import { REHYDRATE } from 'redux-persist'
 import { showAlert } from '../redux/slices/alert'
@@ -52,7 +50,11 @@ const queryWithRefetch: BaseQueryFn = async (args, api, extraOptions) => {
       )
 
       if (error?.status === 400) {
-        api.dispatch(unauthorize())
+        api.dispatch({ type: 'RESET' })
+
+        window.localStorage.clear()
+
+        window.location.pathname = '/login'
       } else if (error?.status === 500) {
         api.dispatch(showAlert('Помилка серверу'))
       } else if (error?.status === 'FETCH_ERROR') {

@@ -12,7 +12,7 @@ import InfoIcon from '@mui/icons-material/Info'
 interface PropsType {
   section: SettingsSection
   onClick: (arg: SettingsSection) => void
-  user: User | null
+  user: User | undefined
 }
 
 const SettingsMenu: FC<PropsType> = ({ section, onClick, user }) => {

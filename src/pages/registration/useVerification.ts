@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useVerifyMutation } from '../../api/authApiSlice'
-import { setUser } from '../../redux/slices/user'
-import { useAppDispatch } from '../../redux/store'
+import { useLazyGetMeQuery } from '../../api/userApiSlice'
+import asyncLocalStorageSet from '../../utils/asyncLocalStorageSet'
+import apiSlice from '../../api/apiSlice'
 
 const useVerification = (token: string | null) => {
-  const dispatch = useAppDispatch()
-
   const [verify] = useVerifyMutation()
+
+  const [trigger] = useLazyGetMeQuery()
 
   const [error, setError] = useState<string>()
 
@@ -20,11 +21,18 @@ const useVerification = (token: string | null) => {
         try {
           const data = await verify(token).unwrap()
 
+          apiSlice.util.invalidateTags(['Document', 'Documents'])
+
+          await Promise.all([
+            (asyncLocalStorageSet('AccessToken', data.accessToken),
+            asyncLocalStorageSet('RefreshToken', data.refreshToken)),
+          ])
+
+          await trigger()
+
           setError(undefined)
 
           setSuccess(true)
-
-          dispatch(setUser(data))
         } catch (e: any) {
           if (e.status === 400) {
             setError('Час дії токену вичерпався або токен невірний')
