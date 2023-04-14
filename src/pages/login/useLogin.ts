@@ -33,6 +33,7 @@ const useLogin = () => {
 
       navigate(redirectUrl)
     } catch (e: any) {
+      console.log(e)
       if (e.status === 404) {
         return {
           email: 'Невірний емейл або пароль',

@@ -10,6 +10,8 @@ import Verification from './pages/registration/Verification'
 import Document from './pages/document/Document'
 import NewDocument from './pages/document/NewDocument'
 import ProtectRoute from './components/ProtectRoute'
+import RequestResetPassword from './pages/resetPassword/RequestResetPassword'
+import ResetPassword from './pages/resetPassword/ResetPassword'
 
 const Router: FC = () => {
   return (
@@ -40,6 +42,11 @@ const Router: FC = () => {
           </ProtectRoute>
         }
       />
+      <Route
+        path="/account/password/reset/request"
+        element={<RequestResetPassword />}
+      />
+      <Route path="/account/password/reset" element={<ResetPassword />} />
       <Route
         path="/home"
         element={

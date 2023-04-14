@@ -8,7 +8,6 @@ import useTheme from '@mui/material/styles/useTheme'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import AddIcon from '@mui/icons-material/Add'
 import { useNavigate } from 'react-router-dom'
-import getLocalValue from '../../utils/getLocalValue'
 import { useLazyGetDocumentQuery } from '../../api/documentApiSlice'
 import { useAppDispatch } from '../../redux/store'
 import { showAlert } from '../../redux/slices/alert'
@@ -17,6 +16,7 @@ import Box from '@mui/material/Box'
 import DocumentInfo from './DocumentInfo'
 import InsertLinkIcon from '@mui/icons-material/InsertLink'
 import { useGetMeQuery } from '../../api/userApiSlice'
+import { EditorState, RawDraftContentState, convertFromRaw } from 'draft-js'
 
 const ToolBarRightActions: FC = () => {
   const dispatch = useAppDispatch()
@@ -45,27 +45,23 @@ const ToolBarRightActions: FC = () => {
   const handleDownload = async () => {
     if (!data) return
 
-    const filePath = `${
-      import.meta.env.VITE_APP_SERVER_ADDRESS
-    }/document/${id}/download`
-
     try {
-      fetch(filePath, {
-        headers: {
-          authorization: getLocalValue('AccessToken'),
-        },
-      })
-        .then((resp) => resp.blob())
-        .then((blob) => {
-          const url = window.URL.createObjectURL(blob)
-          const a = document.createElement('a')
-          a.style.display = 'none'
-          a.href = url
-          a.download = `${data.title}.${data.type}`
-          document.body.appendChild(a)
-          a.click()
-          window.URL.revokeObjectURL(url)
-        })
+      const rawText = EditorState.createWithContent(
+        convertFromRaw(JSON.parse(data.text) as RawDraftContentState)
+      )
+        .getCurrentContent()
+        .getPlainText()
+
+      const url = `data:text/${data.type};base64,${btoa(
+        unescape(encodeURIComponent(rawText))
+      )}`
+      const a = document.createElement('a')
+      a.style.display = 'none'
+      a.href = url
+      a.download = `${data.title}.${data.type}`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
     } catch (e) {
       dispatch(showAlert('Помилка при завантаженні файлу'))
     }

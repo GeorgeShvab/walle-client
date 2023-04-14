@@ -46,6 +46,9 @@ const documentApiSlice = apiSlice.injectEndpoints({
           method: 'PATCH',
           body,
         }),
+        invalidatesTags: (result, error, arg) => [
+          { type: 'Document', id: arg.id },
+        ],
       }
     ),
     createDocument: builder.mutation<Document, void>({

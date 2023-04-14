@@ -8,6 +8,7 @@ interface Props {
   duration?: number
   open: boolean
   text?: string
+  onClose?: () => void
 }
 
 const Alert: FC<Props> = ({
@@ -15,6 +16,7 @@ const Alert: FC<Props> = ({
   duration = 5000,
   text = "Помила з'єднання",
   open,
+  onClose,
 }) => {
   const [state, setState] = useState(open)
 
@@ -27,7 +29,10 @@ const Alert: FC<Props> = ({
       <Snackbar
         open={state}
         autoHideDuration={duration}
-        onClose={() => setState(false)}
+        onClose={() => {
+          setState(false)
+          onClose && onClose()
+        }}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <MuiAlert severity={type} sx={{ width: '100%' }}>

@@ -1,4 +1,9 @@
-import { AuthResponse, LoginArgs, RegistrationArgs } from '../../types'
+import {
+  AuthResponse,
+  LoginArgs,
+  RegistrationArgs,
+  ResetPasswordBody,
+} from '../../types'
 import getLocalValue from '../utils/getLocalValue'
 import apiSlice from './apiSlice'
 
@@ -43,6 +48,20 @@ const authApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['User', 'Document', 'Documents'],
     }),
+    requestPasswordReset: builder.mutation<void, string>({
+      query: (email) => ({
+        url: '/auth/request-reset-password',
+        method: 'POST',
+        body: { email },
+      }),
+    }),
+    resetPassword: builder.mutation<void, ResetPasswordBody>({
+      query: (body) => ({
+        url: '/auth/reset-password',
+        method: 'PATCH',
+        body,
+      }),
+    }),
   }),
 })
 
@@ -52,4 +71,6 @@ export const {
   useLoginMutation,
   useVerifyMutation,
   useLogoutMutation,
+  useRequestPasswordResetMutation,
+  useResetPasswordMutation,
 } = authApiSlice

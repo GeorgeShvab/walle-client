@@ -163,6 +163,11 @@ const Login: FC = () => {
                   Ще не зареєстровані?{' '}
                   <Link to="/registration">Зареєструватись</Link>
                 </Typography>
+                <Typography textAlign="center" fontSize="small">
+                  <Link to="/account/password/reset/request">
+                    Забули пароь?
+                  </Link>
+                </Typography>
               </form>
             </Box>
           )}

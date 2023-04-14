@@ -125,3 +125,8 @@ export interface Tab {
   title: string
   type: DocumentType
 }
+
+interface ResetPasswordBody {
+  password: string
+  verificationToken: string
+}
