@@ -9,6 +9,7 @@ import {
   RawDraftContentState,
   RichUtils,
   getDefaultKeyBinding,
+  Modifier,
 } from 'draft-js'
 import useTheme from '@mui/material/styles/useTheme'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -128,6 +129,18 @@ const TextEditor: FC<
 
       newState && setEditorState(newState)
       return 'handled'
+    } else if (command === 'tab') {
+      let newContentState = Modifier.replaceText(
+        editorState.getCurrentContent(),
+        editorState.getSelection(),
+        '\t'
+      )
+
+      setEditorState(
+        EditorState.push(editorState, newContentState, 'insert-characters')
+      )
+
+      return 'handled'
     }
 
     return 'not-handled'
@@ -136,6 +149,9 @@ const TextEditor: FC<
   const keyBinding = (e: KeyboardEvent): null | string => {
     if (e.key === 's' && e.ctrlKey) {
       return 'strikethrough'
+    } else if (e.key === 'Tab') {
+      e.preventDefault()
+      return 'tab'
     }
 
     return getDefaultKeyBinding(e)

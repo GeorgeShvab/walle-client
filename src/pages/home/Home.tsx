@@ -4,16 +4,15 @@ import { useGetDocumentsQuery } from '../../api/documentApiSlice'
 import Document from './Document'
 import useTheme from '@mui/material/styles/useTheme'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import Paper from '@mui/material/Paper'
-import { Link } from 'react-router-dom'
-import AddIcon from '@mui/icons-material/Add'
 import CircularProgress from '@mui/material/CircularProgress'
 import Error from '../../components/Error'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import AddDocument from './AddDocument'
 
 const Home: FC = () => {
-  const { data, isLoading, error } = useGetDocumentsQuery()
+  const { data, isLoading, error } = useGetDocumentsQuery('order=createdAt')
 
-  const { breakpoints, palette } = useTheme()
+  const { breakpoints } = useTheme()
 
   const isBiggerThanXs = useMediaQuery(breakpoints.up('xs'))
   const isBiggerThanSm = useMediaQuery(breakpoints.up('sm'))
@@ -75,51 +74,22 @@ const Home: FC = () => {
           />
         </Box>
       ) : (
-        <Box
-          display="grid"
-          gridTemplateColumns={gridTemplateColumns}
-          sx={{ gridGap: isBiggerThanMd ? '15px' : '10px' }}
-          padding={isBiggerThanMd ? '25px' : '15px'}
-        >
-          <Link to={`/documents/new`}>
-            <Paper
-              sx={{
-                transition: '0.15s box-shadow, 0.15s background',
-                maxWidth: '200px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column',
-                aspectRatio: '1 / 1',
-                background:
-                  palette.mode === 'light'
-                    ? undefined
-                    : palette.background.light,
-                '&:hover': {
-                  boxShadow: `0px 2px 1px -1px rgba(0,0,0,0.3), 0px 1px 1px 0px rgba(0,0,0,0.24), 0px 1px 3px 0px rgba(0,0,0,0.22)`,
-                  background:
-                    palette.mode === 'light'
-                      ? undefined
-                      : palette.background.light + 'd9',
-                },
-              }}
-            >
-              <AddIcon
-                sx={{
-                  '& path': {
-                    fill:
-                      palette.mode === 'light'
-                        ? palette.primary.main
-                        : palette.grey[600],
-                  },
-                  fontSize: isBiggerThanMd ? '60px' : '40px',
-                }}
-              />
-            </Paper>
-          </Link>
-          {data?.map((item) => (
-            <Document key={item.id} {...item} />
-          ))}
+        <Box>
+          <TransitionGroup
+            style={{
+              display: 'grid',
+              gridGap: isBiggerThanMd ? '15px' : '10px',
+              padding: isBiggerThanMd ? '25px' : '15px',
+              gridTemplateColumns,
+            }}
+          >
+            <AddDocument />
+            {data?.map((item) => (
+              <CSSTransition key={item.id} timeout={150} classNames="doc">
+                <Document {...item} />
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
         </Box>
       )}
     </Box>
