@@ -11,8 +11,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import { useUpdateDocument } from '../../hooks/useDocument'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
-import Box from '@mui/material/Box'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 const ChangeDocumentType: FC<DialogPropsType> = ({
   id,
@@ -87,20 +86,15 @@ const ChangeDocumentType: FC<DialogPropsType> = ({
         </ListItem>
       </List>
       <DialogActions>
-        {isLoading ? (
-          <Box display="flex" justifyContent="center" width="100%">
-            <Box sx={{ transform: 'translateY(-10px)' }}>
-              <CircularProgress />
-            </Box>
-          </Box>
-        ) : (
-          <>
-            <Button onClick={onClose}>Відмінити</Button>
-            <Button onClick={handleUpdate} variant="outlined" autoFocus>
-              Змінити розширення
-            </Button>
-          </>
-        )}
+        <Button onClick={onClose}>Відмінити</Button>
+        <LoadingButton
+          onClick={handleUpdate}
+          loading={isLoading}
+          variant="outlined"
+          autoFocus
+        >
+          Змінити розширення
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

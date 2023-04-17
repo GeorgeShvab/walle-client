@@ -95,48 +95,61 @@ const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
           role: 'listbox',
         }}
       >
-        <MenuList>
-          {data &&
-            data.owner === user?.id && [
-              //Simple array here becouse MenuList dosen't except Fragment as Child (error)
-              <MenuItem onClick={() => handleClick('rename')}>
-                <ListItemIcon>
-                  <EditIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Перейменувати</ListItemText>
-              </MenuItem>,
-              <MenuItem onClick={() => handleClick('change_type')}>
-                <ListItemIcon>
-                  <DriveFileRenameOutlineIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Змінити розширення</ListItemText>
-              </MenuItem>,
-              <MenuItem onClick={() => handleClick('delete')}>
-                <ListItemIcon>
-                  <DeleteIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Видалити</ListItemText>
-              </MenuItem>,
-              <MenuItem onClick={() => handleClick('change_access')}>
-                <ListItemIcon>
-                  <LockIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Налаштування доступу</ListItemText>
-              </MenuItem>,
-            ]}
-          <MenuItem onClick={handleDownload}>
-            <ListItemIcon>
-              <DownloadIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Завантажити документ</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleCopyClick}>
-            <ListItemIcon>
-              <InsertLinkIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Скопіювати посилання</ListItemText>
-          </MenuItem>
-        </MenuList>
+        {data && data.owner === user?.id ? (
+          <MenuList>
+            <MenuItem onClick={() => handleClick('rename')}>
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Перейменувати</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => handleClick('change_type')}>
+              <ListItemIcon>
+                <DriveFileRenameOutlineIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Змінити розширення</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => handleClick('delete')}>
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Видалити</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => handleClick('change_access')}>
+              <ListItemIcon>
+                <LockIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Налаштування доступу</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleDownload}>
+              <ListItemIcon>
+                <DownloadIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Завантажити документ</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleCopyClick}>
+              <ListItemIcon>
+                <InsertLinkIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Скопіювати посилання</ListItemText>
+            </MenuItem>
+          </MenuList>
+        ) : (
+          <MenuList>
+            <MenuItem onClick={handleDownload}>
+              <ListItemIcon>
+                <DownloadIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Завантажити документ</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleCopyClick}>
+              <ListItemIcon>
+                <InsertLinkIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Скопіювати посилання</ListItemText>
+            </MenuItem>
+          </MenuList>
+        )}
       </Menu>
     </>
   )

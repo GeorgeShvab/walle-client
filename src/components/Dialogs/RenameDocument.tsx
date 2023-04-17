@@ -6,12 +6,12 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { FC, useEffect } from 'react'
-import { DialogPropsType, Document, DocumentType } from '../../../types'
+import { DialogPropsType, DocumentType } from '../../../types'
 import { useUpdateDocument } from '../../hooks/useDocument'
-import CircularProgress from '@mui/material/CircularProgress'
 import { Formik, FormikHelpers } from 'formik'
 import TextField from '@mui/material/TextField'
 import * as yup from 'yup'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 interface RenameRequestBody {
   title: string
@@ -119,20 +119,14 @@ const RenameDocument: FC<DialogPropsType> = ({
               />
             </DialogContent>
             <DialogActions>
-              {isLoading ? (
-                <Box display="flex" justifyContent="center" width="100%">
-                  <Box sx={{ transform: 'translateY(-10px)' }}>
-                    <CircularProgress />
-                  </Box>
-                </Box>
-              ) : (
-                <>
-                  <Button onClick={onClose}>Відмінити</Button>
-                  <Button type="submit" variant="outlined">
-                    Змінити назву
-                  </Button>
-                </>
-              )}
+              <Button onClick={onClose}>Відмінити</Button>
+              <LoadingButton
+                loading={isLoading}
+                variant="outlined"
+                type="submit"
+              >
+                Змінити назву
+              </LoadingButton>
             </DialogActions>
           </form>
         )}

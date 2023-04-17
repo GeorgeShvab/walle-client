@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -7,8 +6,8 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { FC, useEffect } from 'react'
 import { useDeleteDocument } from '../../hooks/useDocument'
-import CircularProgress from '@mui/material/CircularProgress'
 import { DialogPropsType } from '../../../types'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 const DeleteDocument: FC<DialogPropsType> = ({
   open,
@@ -46,25 +45,16 @@ const DeleteDocument: FC<DialogPropsType> = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        {isLoading ? (
-          <Box display="flex" justifyContent="center" width="100%">
-            <Box sx={{ transform: 'translateY(-10px)' }}>
-              <CircularProgress />
-            </Box>
-          </Box>
-        ) : (
-          <>
-            <Button onClick={onClose}>Відмінити</Button>
-            <Button
-              onClick={handleDelete}
-              color="error"
-              variant="outlined"
-              autoFocus
-            >
-              Видалити
-            </Button>
-          </>
-        )}
+        <Button onClick={onClose}>Відмінити</Button>
+        <LoadingButton
+          onClick={handleDelete}
+          loading={isLoading}
+          variant="outlined"
+          color="error"
+          autoFocus
+        >
+          Видалити
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )
