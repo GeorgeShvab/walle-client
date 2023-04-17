@@ -13,7 +13,7 @@ const InterfaceSettings: FC = () => {
 
   const settings = useAppSelector(selectSettings)
 
-  const updateSettings = useUpdateSettings()
+  const [updateSettings] = useUpdateSettings()
 
   const onFontChange = (font: Font) => {
     dispatch(setSettings({ font }))

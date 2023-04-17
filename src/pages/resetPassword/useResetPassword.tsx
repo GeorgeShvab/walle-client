@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   useRequestPasswordResetMutation,
   useResetPasswordMutation,
@@ -10,63 +9,51 @@ import {
 } from '../../../types'
 import { FormikHelpers } from 'formik'
 import { useAppDispatch } from '../../redux/store'
+import { showAlert } from '../../redux/slices/alert'
 
-interface Status {
-  error: boolean
-  success: boolean
-  isLoading: boolean
+interface RequestPasswordReset {
+  email: string
 }
 
 export const useRequestPasswordReset = () => {
-  const [status, setStatus] = useState<Status>({
-    error: false,
-    success: false,
-    isLoading: false,
-  })
-
-  const [requestReset] = useRequestPasswordResetMutation()
+  const [requestReset, data] = useRequestPasswordResetMutation()
 
   return [
-    async (email: string) => {
+    async (
+      values: RequestPasswordReset,
+      actions: FormikHelpers<RequestPasswordReset>
+    ) => {
       try {
-        setStatus((prev) => ({ ...prev, isLoading: true }))
+        if (!values.email) actions.setErrors({ email: 'Вкажіть Ваш емейл' })
 
-        if (!email) throw new Error('No email')
-
-        const data = await requestReset(email).unwrap()
-
-        setStatus({ error: false, success: true, isLoading: false })
-      } catch (e) {
-        setStatus({ error: true, success: false, isLoading: false })
-      }
+        await requestReset(values.email).unwrap()
+      } catch (e) {}
     },
-    status,
+    data,
   ] as const
 }
 
 export const useResetPassword = () => {
-  const [status, setStatus] = useState<Status>({
-    error: false,
-    success: false,
-    isLoading: false,
-  })
-
-  const [resetPassword] = useResetPasswordMutation()
+  const [resetPassword, data] = useResetPasswordMutation()
 
   return [
-    async (body: ResetPasswordBody) => {
+    async (
+      body: { verificationToken?: string; password: string },
+      actions: FormikHelpers<{ password: string }>
+    ) => {
       try {
-        setStatus((prev) => ({ ...prev, isLoading: true }))
+        if (!body.password) {
+          actions.setErrors({ password: 'Введіть новий пароль' })
+          return
+        }
 
-        const data = await resetPassword(body).unwrap()
-
-        setStatus({ error: false, success: true, isLoading: false })
+        await resetPassword(body as ResetPasswordBody).unwrap()
       } catch (e: any) {
-        setStatus({ error: true, success: false, isLoading: false })
-
-        return e as FailedResponse<ValidationError>
+        if (e.status === 400 && e.data.errors) {
+          actions.setErrors((e as FailedResponse<ValidationError>).data.errors)
+        }
       }
     },
-    status,
+    data,
   ] as const
 }

@@ -6,18 +6,12 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { FC, useEffect } from 'react'
-import { Document, DocumentType } from '../../../types'
+import { DialogPropsType, Document, DocumentType } from '../../../types'
 import { useUpdateDocument } from '../../hooks/useDocument'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Formik, FormikHelpers } from 'formik'
 import TextField from '@mui/material/TextField'
 import * as yup from 'yup'
-
-interface PropsTypes extends Document {
-  open: boolean
-  onClose: () => void
-  onAction?: (arg: string) => void
-}
 
 interface RenameRequestBody {
   title: string
@@ -30,21 +24,21 @@ const validationSchema = yup.object().shape({
     .required('Введіть назву'),
 })
 
-const RenameDocument: FC<PropsTypes> = ({
+const RenameDocument: FC<DialogPropsType> = ({
   open,
   onClose,
   title,
   id,
   type,
-  onAction,
 }) => {
-  const [updateDocument, status] = useUpdateDocument()
+  const [updateDocument, { isLoading, isSuccess, isError }] =
+    useUpdateDocument()
 
   useEffect(() => {
-    if (status.error || status.success) {
+    if (isError || isSuccess) {
       onClose()
     }
-  }, [status])
+  }, [isError, isSuccess, isLoading])
 
   const handleSubmit = (
     args: RenameRequestBody,
@@ -75,10 +69,6 @@ const RenameDocument: FC<PropsTypes> = ({
       updateDocument({ ...args, type: ext, id }, actions)
     }
   }
-
-  useEffect(() => {
-    if (status.success) onAction && onAction(id)
-  }, [status.success])
 
   const initialValues: RenameRequestBody = {
     title: `${title}.${type}`,
@@ -129,7 +119,7 @@ const RenameDocument: FC<PropsTypes> = ({
               />
             </DialogContent>
             <DialogActions>
-              {status.isLoading ? (
+              {isLoading ? (
                 <Box display="flex" justifyContent="center" width="100%">
                   <Box sx={{ transform: 'translateY(-10px)' }}>
                     <CircularProgress />

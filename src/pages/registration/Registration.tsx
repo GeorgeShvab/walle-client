@@ -17,6 +17,8 @@ import Alert from '../../components/Alert'
 import useRegistration from './useRegistration'
 import { RegistrationArgs } from '../../../types'
 import CenterContentPageWrapper from '../../components/CenterContentPageWrapper'
+import LoadingButton from '@mui/lab/LoadingButton'
+import useTitle from '../../hooks/useTitle'
 
 const validationSchema = yup.object().shape({
   password: yup
@@ -43,24 +45,28 @@ const Registration: FC = () => {
 
   const googleAuth = useGoogleAuthorization()
 
-  const handleSubmit = useRegistration()
+  const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
-  const isLesserThamMd = useMediaQuery(breakpoints.down('md'))
+  const [handleSubmit, { isError, isLoading }] = useRegistration()
+
+  useTitle('Реєстрація')
 
   return (
     <CenterContentPageWrapper>
       <Paper
         elevation={2}
         sx={{
-          padding: isLesserThamMd ? '35px 30px' : '35px 40px',
+          padding: isLesserThanMd ? '35px 30px' : '35px 40px',
           width: '100%',
-          maxWidth: isLesserThamMd ? '100%' : '400px',
+          maxWidth: isLesserThanMd ? '100%' : '400px',
         }}
       >
         <Formik
           onSubmit={handleSubmit}
           initialValues={initialValues}
           validationSchema={validationSchema}
+          validateOnBlur={isError}
+          validateOnChange={isError}
         >
           {({
             values,
@@ -138,23 +144,27 @@ const Registration: FC = () => {
                       (touched.password && errors.password) ||
                       ' '}
                   </FormHelperText>
-                  <Button
+                  <LoadingButton
                     type="submit"
                     variant="contained"
-                    size={isLesserThamMd ? 'large' : 'medium'}
+                    size={isLesserThanMd ? 'large' : 'medium'}
+                    disabled={Boolean(
+                      !values.password || !values.email || !values.name
+                    )}
+                    loading={isLoading}
                     sx={{
                       textTransform: 'unset',
                     }}
                     fullWidth
                   >
                     Зареєструватись
-                  </Button>
+                  </LoadingButton>
                 </Box>
                 <Divider sx={{ padding: '15px 0' }}>або</Divider>
                 <Box mb="15px">
                   <Button
                     variant="outlined"
-                    size={isLesserThamMd ? 'large' : 'medium'}
+                    size={isLesserThanMd ? 'large' : 'medium'}
                     startIcon={<GoogleIcon />}
                     sx={{ textTransform: 'unset' }}
                     onClick={() => googleAuth()}

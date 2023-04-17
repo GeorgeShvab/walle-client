@@ -20,35 +20,21 @@ const ChangeDocumentType: FC<DialogPropsType> = ({
   onClose,
   open,
   type,
-  onAction,
 }) => {
-  const [updateDocument, status] = useUpdateDocument()
+  const [updateDocument, { isLoading, isSuccess, isError }] =
+    useUpdateDocument()
 
   const [docType, setDocType] = useState<DocumentType>(type)
 
   useEffect(() => {
-    if (status.error || status.success) {
+    if (isError || isSuccess) {
       onClose()
     }
-  }, [status])
-
-  useEffect(() => {
-    if (open === false) {
-      setDocType(type)
-    }
-  }, [open])
-
-  useEffect(() => {
-    setDocType(type)
-  }, [type])
+  }, [isError, isSuccess, isLoading])
 
   const handleUpdate = () => {
     updateDocument({ id, type: docType })
   }
-
-  useEffect(() => {
-    if (status.success) onAction && onAction(id)
-  }, [status.success])
 
   return (
     <Dialog
@@ -101,7 +87,7 @@ const ChangeDocumentType: FC<DialogPropsType> = ({
         </ListItem>
       </List>
       <DialogActions>
-        {status.isLoading ? (
+        {isLoading ? (
           <Box display="flex" justifyContent="center" width="100%">
             <Box sx={{ transform: 'translateY(-10px)' }}>
               <CircularProgress />

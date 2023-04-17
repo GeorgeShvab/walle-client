@@ -21,37 +21,21 @@ const ChangeDocumentAccess: FC<DialogPropsType> = ({
   onClose,
   open,
   type,
-  onAction,
 }) => {
-  const [updateDocument, status] = useUpdateDocument()
+  const [updateDocument, { isError, isSuccess, isLoading }] =
+    useUpdateDocument()
 
   const [accessType, setAccessType] = useState<AccessType>(access)
 
   useEffect(() => {
-    if (status.error || status.success) {
+    if (isError || isSuccess) {
       onClose()
     }
-  }, [status])
-
-  useEffect(() => {
-    if (open === false) {
-      setAccessType(access)
-    }
-  }, [open])
-
-  useEffect(() => {
-    setAccessType(access)
-  }, [access])
+  }, [isError, isSuccess, isLoading])
 
   const handleUpdate = () => {
-    updateDocument({ access: accessType, id })
+    if (access !== accessType) updateDocument({ access: accessType, id })
   }
-
-  useEffect(() => {
-    if (status.success) {
-      onAction && onAction(id)
-    }
-  }, [status.success])
 
   return (
     <Dialog
@@ -104,7 +88,7 @@ const ChangeDocumentAccess: FC<DialogPropsType> = ({
         </ListItem>
       </List>
       <DialogActions>
-        {status.isLoading ? (
+        {isLoading ? (
           <Box display="flex" justifyContent="center" width="100%">
             <Box sx={{ transform: 'translateY(-10px)' }}>
               <CircularProgress />

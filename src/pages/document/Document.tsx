@@ -1,22 +1,19 @@
-import { FC, useEffect } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
-import { useAppDispatch } from '../../redux/store'
+import { FC } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import 'draft-js/dist/Draft.css'
 import TextEditor from './TextEditor'
 import { useGetDocumentQuery } from '../../api/documentApiSlice'
 import Box from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import generateId from '../../utils/generateId'
 import useTheme from '@mui/material/styles/useTheme'
 import Error from '../../components/Error'
 import CircularProgress from '@mui/material/CircularProgress'
-import { mergeTab, openTab } from '../../redux/slices/tabs'
 import { useGetMeQuery } from '../../api/userApiSlice'
 import Button from '@mui/material/Button'
+import useTitle from '../../hooks/useTitle'
+import useAddTab from './useAddTab'
 
 const Document: FC = () => {
-  const dispatch = useAppDispatch()
-
   const { data: user } = useGetMeQuery()
 
   const { breakpoints } = useTheme()
@@ -25,36 +22,22 @@ const Document: FC = () => {
 
   const { id } = useParams()
 
-  const { search } = useLocation()
+  const { data, isLoading, error } = useGetDocumentQuery(id || '')
 
-  const { data, isLoading, error, refetch } = useGetDocumentQuery(id || '')
+  useAddTab(data)
 
-  useEffect(() => {
-    const tabId = new URLSearchParams(search).get('tabId')
-
-    if (data && data?.id === id) {
-      if (id && tabId) {
-        dispatch(mergeTab({ ...data, tabId }))
-      } else if (id) {
-        dispatch(
-          openTab({
-            title: data.title,
-            type: data.type,
-            tabId: generateId(),
-            id,
-          })
-        )
-      }
-    }
-  }, [id, data, search])
-
-  useEffect(() => {
-    refetch()
-  }, [id])
+  useTitle(data?.title || 'WallE')
 
   // used key here because of some bug when setting new state with useEffect. Linkify plugin stops working when I use useEffect
 
   if (error) {
+    const title: string =
+      typeof (error as any)?.status === 'number'
+        ? String((error as any)?.status)
+        : "Помилка з'єднання"
+
+    const subtitle: string = (error as any)?.data?.msg || "Помилка з'єднання"
+
     return (
       <Box component="main">
         <Box height="var(--screenHeight)" position="relative">
@@ -65,8 +48,8 @@ const Document: FC = () => {
               top: '50%',
               transform: 'translate(-50%, -50%)',
             }}
-            title={(error as any)?.status || '500'}
-            subtitle={(error as any)?.data?.msg || "Помилка з'єднання"}
+            title={title}
+            subtitle={subtitle}
             subElement={
               (error as any)?.status === 401 ? (
                 <Box padding="30px">
@@ -109,7 +92,7 @@ const Document: FC = () => {
           <TextEditor
             {...data}
             isLoading={isLoading}
-            key={data.text}
+            key={data.id}
             currentUser={user?.id}
           />
         )

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { showAlert } from '../redux/slices/alert'
 import { useLazyGetMeQuery } from '../api/userApiSlice'
 import asyncLocalStorageSet from '../utils/asyncLocalStorageSet'
-import apiSlice from '../api/apiSlice'
 
 type SuccessResponse = Omit<
   TokenResponse,
@@ -29,8 +28,6 @@ const useGoogleAuthorization = () => {
   const onSuccess = async (response: SuccessResponse) => {
     try {
       const data = await googleAuth(response.access_token).unwrap()
-
-      apiSlice.util.invalidateTags(['Document', 'Documents'])
 
       await Promise.all([
         (asyncLocalStorageSet('AccessToken', data.accessToken),

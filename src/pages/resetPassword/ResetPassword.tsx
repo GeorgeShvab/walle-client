@@ -11,9 +11,8 @@ import Button from '@mui/material/Button'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 import { useResetPassword } from './useResetPassword'
-import { ResetPasswordBody } from '../../../types'
-import Alert from '../../components/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
+import { FailedResponse, ValidationError } from '../../../types'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 const validationSchema = yup.object().shape({
   password: yup
@@ -34,46 +33,43 @@ const ResetPassword: FC = () => {
 
   const token = new URLSearchParams(search).get('token')
 
-  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false)
+  const [resetPassword, { isError, isSuccess, isLoading, error }] =
+    useResetPassword()
 
   useEffect(() => {
-    if (token) {
-      setIsAlertOpen(false)
+    if (isSuccess) {
+      setTimeout(() => {
+        navigate('/login')
+      }, 10000)
     }
-  }, [token])
-
-  const [resetPassword, { error, success, isLoading }] = useResetPassword()
+  }, [isSuccess])
 
   const handleSubmit = async (
     values: { password: string },
     actions: FormikHelpers<{ password: string }>
   ) => {
-    if (!token) {
-      setIsAlertOpen(true)
-      return
-    }
-
-    const data = await resetPassword({
-      password: values.password,
-      verificationToken: token,
-    })
-
-    if (data?.data?.errors) {
-      actions.setErrors(data.data?.errors)
-    } else if (!data?.data?.errors && data?.status === 400) {
-      setIsAlertOpen(true)
-    }
+    await resetPassword(
+      { verificationToken: token || undefined, ...values },
+      actions
+    )
   }
 
-  useEffect(() => {
-    if (success) {
-      setTimeout(() => {
-        navigate('/login')
-      }, 10000)
-    }
-  }, [success])
+  if (
+    (error as FailedResponse<ValidationError>)?.data?.errors
+      .verificationToken ||
+    isSuccess
+  ) {
+    let text
 
-  if (isLoading) {
+    if (isSuccess) {
+      text = `Через кілька секунд ми автоматично перенаправимо вас на
+    сторінку авторизації. Якщо перенаправлення не відбулось, скористайтесь
+    кнопкою нижче.`
+    } else {
+      text = (error as FailedResponse<ValidationError>).data.errors
+        .verificationToken
+    }
+
     return (
       <CenterContentPageWrapper>
         <Paper
@@ -84,8 +80,34 @@ const ResetPassword: FC = () => {
             maxWidth: isLesserThanMd ? '100%' : '400px',
           }}
         >
-          <Box display="flex" justifyContent="center">
-            <CircularProgress />
+          <Box>
+            <Typography
+              variant="h5"
+              fontWeight="700"
+              textAlign="center"
+              mb="30px"
+            >
+              {isSuccess ? 'Пароль змінено' : 'Помилка'}
+            </Typography>
+            <Typography
+              textAlign="center"
+              mb="25px"
+              color={palette.primary.light}
+            >
+              {text}
+            </Typography>
+            <Link to="/login">
+              <Button
+                variant="contained"
+                sx={{
+                  textTransform: 'unset',
+                  margin: '0 auto',
+                  display: 'block',
+                }}
+              >
+                На сторінку авторизації
+              </Button>
+            </Link>
           </Box>
         </Paper>
       </CenterContentPageWrapper>
@@ -93,123 +115,82 @@ const ResetPassword: FC = () => {
   }
 
   return (
-    <>
-      <Alert
-        open={isAlertOpen}
-        text="Токен для зміни паролю не знайдено. або термін його дії збіг"
-        onClose={() => setIsAlertOpen(false)}
-      />
-      <CenterContentPageWrapper>
-        <Paper
-          elevation={2}
-          sx={{
-            padding: isLesserThanMd ? '35px 30px' : '35px 40px',
-            width: '100%',
-            maxWidth: isLesserThanMd ? '100%' : '400px',
-          }}
+    <CenterContentPageWrapper>
+      <Paper
+        elevation={2}
+        sx={{
+          padding: isLesserThanMd ? '35px 30px' : '35px 40px',
+          width: '100%',
+          maxWidth: isLesserThanMd ? '100%' : '400px',
+        }}
+      >
+        <Formik
+          onSubmit={handleSubmit}
+          initialValues={{ password: '' }}
+          validationSchema={validationSchema}
+          validateOnBlur={isError}
+          validateOnChange={isError}
         >
-          {error || success ? (
+          {({
+            values,
+            errors,
+            touched,
+            handleSubmit,
+            handleBlur,
+            handleChange,
+          }) => (
             <Box>
-              <Typography
-                variant="h5"
-                fontWeight="700"
-                textAlign="center"
-                mb="30px"
-              >
-                {success ? 'Пароль змінено' : 'Помилка'}
-              </Typography>
-              <Typography
-                textAlign="center"
-                mb="25px"
-                color={palette.primary.light}
-              >
-                {success
-                  ? `Через кілька секунд ми автоматично перенаправимо вас на
-                  сторінку авторизації. Якщо перенаправлення не відбулось, скористайтесь
-                  кнопкою нижче.`
-                  : error}
-              </Typography>
-              <Link to="/login">
-                <Button
-                  variant="contained"
-                  sx={{
-                    textTransform: 'unset',
-                    margin: '0 auto',
-                    display: 'block',
-                  }}
-                >
-                  На сторінку авторизації
-                </Button>
-              </Link>
-            </Box>
-          ) : (
-            <Formik
-              onSubmit={handleSubmit}
-              initialValues={{ password: '' }}
-              validationSchema={validationSchema}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleSubmit,
-                handleBlur,
-                handleChange,
-              }) => (
+              <form onSubmit={handleSubmit}>
                 <Box>
-                  <form onSubmit={handleSubmit}>
-                    <Box>
-                      <Typography
-                        variant="h5"
-                        fontWeight="700"
-                        textAlign="center"
-                        mb="40px"
-                      >
-                        Зміна паролю
-                      </Typography>
-                      <TextField
-                        variant="outlined"
-                        size="small"
-                        name="password"
-                        label="Новий пароль"
-                        type="password"
-                        autoComplete="new-password"
-                        value={values.password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={
-                          Boolean(touched.password) && Boolean(errors.password)
-                        }
-                        helperText={
-                          (touched.password && errors.password) || ' '
-                        }
-                        sx={{ mb: '10px' }}
-                        fullWidth
-                      ></TextField>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        size={isLesserThanMd ? 'large' : 'medium'}
-                        sx={{
-                          textTransform: 'unset',
-                          mb: '15px',
-                        }}
-                        fullWidth
-                      >
-                        Змінити пароль
-                      </Button>
-                    </Box>
-                    <Typography textAlign="center" fontSize="small">
-                      <Link to="/">На головну</Link>
-                    </Typography>
-                  </form>
+                  <Typography
+                    variant="h5"
+                    fontWeight="700"
+                    textAlign="center"
+                    mb="40px"
+                  >
+                    Зміна пароля
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    name="password"
+                    label="Новий пароль"
+                    type="password"
+                    autoComplete="new-password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      Boolean(touched.password) && Boolean(errors.password)
+                    }
+                    helperText={(touched.password && errors.password) || ' '}
+                    sx={{ mb: '10px' }}
+                    fullWidth
+                  ></TextField>
+                  <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    size={isLesserThanMd ? 'large' : 'medium'}
+                    disabled={Boolean(!values.password)}
+                    loading={isLoading}
+                    sx={{
+                      textTransform: 'unset',
+                      mb: '15px',
+                    }}
+                    fullWidth
+                  >
+                    Змінити пароль
+                  </LoadingButton>
                 </Box>
-              )}
-            </Formik>
+                <Typography textAlign="center" fontSize="small">
+                  <Link to="/">На головну</Link>
+                </Typography>
+              </form>
+            </Box>
           )}
-        </Paper>
-      </CenterContentPageWrapper>
-    </>
+        </Formik>
+      </Paper>
+    </CenterContentPageWrapper>
   )
 }
 

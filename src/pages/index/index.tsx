@@ -7,11 +7,14 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { Link } from 'react-router-dom'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import useTitle from '../../hooks/useTitle'
 
 const Index: FC = () => {
   const { palette, breakpoints } = useTheme()
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
+
+  useTitle('WallE')
 
   return (
     <Box component="main" minHeight="100vh">

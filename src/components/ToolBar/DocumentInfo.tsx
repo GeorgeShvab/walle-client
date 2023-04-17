@@ -4,12 +4,28 @@ import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
 import { FC, useRef, useState } from 'react'
 import InfoIcon from '@mui/icons-material/Info'
-import { AccessType } from '../../../types'
+import { AccessType, User } from '../../../types'
 
-const DocumentInfo: FC<{ access: AccessType }> = ({ access }) => {
+const DocumentInfo: FC<{
+  access: AccessType
+  currentUser: User | undefined
+}> = ({ access, currentUser }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const btnRef = useRef<HTMLButtonElement>(null)
+
+  let message
+
+  if (access === 'restricted') {
+    message =
+      'Документ належить іншому користувачу. Ви можете лише переглядати його.'
+  } else if (access === 'public' && currentUser) {
+    message =
+      'Документ належить іншому користувачу. Ви можете переглядати та змінювати його.'
+  } else if (access === 'public') {
+    message =
+      'Документ належить іншому користувачу. Ви можете лише переглядати його. Щоб мати змогу змінити документ, авторизуйтесь.'
+  }
 
   return (
     <>
@@ -26,11 +42,7 @@ const DocumentInfo: FC<{ access: AccessType }> = ({ access }) => {
         }}
       >
         <Box padding="20px 25px" maxWidth="400px">
-          <Typography>
-            {access === 'restricted'
-              ? 'Документ належить іншому користувачу. Ви можете лише переглядати його.'
-              : 'Документ належить іншому користувачу. Ви можете переглядати та змінювати його.'}
-          </Typography>
+          <Typography>{message}</Typography>
         </Box>
       </Popover>
     </>

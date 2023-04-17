@@ -3,7 +3,7 @@ import { LoginArgs } from '../../../types'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useLazyGetMeQuery } from '../../api/userApiSlice'
 import asyncLocalStorageSet from '../../utils/asyncLocalStorageSet'
-import apiSlice from '../../api/apiSlice'
+import { FormikHelpers } from 'formik'
 
 const useLogin = () => {
   const [trigger] = useLazyGetMeQuery()
@@ -12,35 +12,36 @@ const useLogin = () => {
 
   const location = useLocation()
 
-  const [login] = useLoginMutation()
+  const [login, data] = useLoginMutation()
 
   const redirectUrl = /documents/.test(location?.state?.referrer)
     ? location?.state?.referrer
     : '/home'
 
-  return async (args: LoginArgs) => {
-    try {
-      const data = await login(args).unwrap()
+  return [
+    async (values: LoginArgs, actions: FormikHelpers<LoginArgs>) => {
+      try {
+        const data = await login(values).unwrap()
 
-      apiSlice.util.invalidateTags(['Document', 'Documents'])
+        await Promise.all([
+          (asyncLocalStorageSet('AccessToken', data.accessToken),
+          asyncLocalStorageSet('RefreshToken', data.refreshToken)),
+        ])
 
-      await Promise.all([
-        (asyncLocalStorageSet('AccessToken', data.accessToken),
-        asyncLocalStorageSet('RefreshToken', data.refreshToken)),
-      ])
+        await trigger()
 
-      await trigger()
-
-      navigate(redirectUrl)
-    } catch (e: any) {
-      if (e.status === 404) {
-        return {
-          email: 'Невірний емейл або пароль',
-          password: 'Невірний емейл або пароль',
+        navigate(redirectUrl)
+      } catch (e: any) {
+        if (e.status === 404) {
+          actions.setErrors({
+            email: 'Невірний емейл або пароль',
+            password: 'Невірний емейл або пароль',
+          })
         }
       }
-    }
-  }
+    },
+    data,
+  ] as const
 }
 
 export default useLogin

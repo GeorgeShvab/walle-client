@@ -60,6 +60,8 @@ const documentApiSlice = apiSlice.injectEndpoints({
   }),
 })
 
+export default documentApiSlice
+
 export const {
   useGetDocumentsQuery,
   useDeleteDocumentMutation,

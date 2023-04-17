@@ -7,7 +7,7 @@ import * as yup from 'yup'
 import { useUpdatePassword } from './useSettings'
 import TextField from '@mui/material/TextField'
 import FormHelperText from '@mui/material/FormHelperText'
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 const validationSchema = yup.object().shape({
   oldPassword: yup
@@ -32,7 +32,7 @@ const PasswordSettings: FC = () => {
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
-  const updatePassword = useUpdatePassword()
+  const [updatePassword, { isLoading, isError }] = useUpdatePassword()
 
   return (
     <Box>
@@ -40,6 +40,8 @@ const PasswordSettings: FC = () => {
         validationSchema={validationSchema}
         initialValues={initialValues}
         onSubmit={updatePassword}
+        validateOnBlur={isError}
+        validateOnChange={isError}
       >
         {({
           errors,
@@ -94,17 +96,19 @@ const PasswordSettings: FC = () => {
                     (touched.password && errors.password) ||
                     ''}
                 </FormHelperText>
-                <Button
+                <LoadingButton
                   type="submit"
                   variant="contained"
                   size={isLesserThanMd ? 'large' : 'medium'}
+                  disabled={Boolean(!values.password)}
+                  loading={isLoading}
                   sx={{
                     textTransform: 'unset',
                   }}
                   fullWidth
                 >
                   Змінити пароль
-                </Button>
+                </LoadingButton>
               </Box>
             </form>
           </Box>

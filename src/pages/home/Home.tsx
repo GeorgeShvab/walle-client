@@ -8,6 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Error from '../../components/Error'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import AddDocument from './AddDocument'
+import useTitle from '../../hooks/useTitle'
 
 const Home: FC = () => {
   const { data, isLoading, error } = useGetDocumentsQuery('order=createdAt')
@@ -21,6 +22,8 @@ const Home: FC = () => {
   const isBiggerThanXl = useMediaQuery(breakpoints.up('xl'))
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
+
+  useTitle('WallE')
 
   let gridTemplateColumns: string = '1fr 1fr 1fr'
 

@@ -8,8 +8,6 @@ const useMode = () => {
   useEffect(() => {
     const tag = document.querySelector('meta[name="theme-color"]')
 
-    const body = document.querySelector('body')
-
     tag?.setAttribute(
       'content',
       settings.mode === 'light' ? '#ffffff' : '#121212'

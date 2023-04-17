@@ -6,16 +6,17 @@ import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import useTheme from '@mui/material/styles/useTheme'
-import { Formik, FormikHelpers } from 'formik'
+import { Formik } from 'formik'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import * as yup from 'yup'
 import useGoogleAuthorization from '../../hooks/googleAuth'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { LoginArgs } from '../../../types'
 import GoogleIcon from '@mui/icons-material/Google'
 import useLogin from './useLogin'
 import CenterContentPageWrapper from '../../components/CenterContentPageWrapper'
+import LoadingButton from '@mui/lab/LoadingButton'
+import useTitle from '../../hooks/useTitle'
 
 const validationSchema = yup.object().shape({
   password: yup
@@ -39,36 +40,28 @@ const Login: FC = () => {
 
   const googleAuth = useGoogleAuthorization()
 
-  const login = useLogin()
+  const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
 
-  const isLesserThamMd = useMediaQuery(breakpoints.down('md'))
+  const [handleSubmit, { isLoading, isError }] = useLogin()
 
-  const handleSubmit = async (
-    values: LoginArgs,
-    actions: FormikHelpers<LoginArgs>
-  ) => {
-    const data = await login(values)
-    if (data) {
-      actions.setErrors(data)
-    }
-  }
+  useTitle('Вхід')
 
   return (
     <CenterContentPageWrapper>
       <Paper
         elevation={2}
         sx={{
-          padding: isLesserThamMd ? '35px 30px' : '35px 40px',
+          padding: isLesserThanMd ? '35px 30px' : '35px 40px',
           width: '100%',
-          maxWidth: isLesserThamMd ? '100%' : '400px',
+          maxWidth: isLesserThanMd ? '100%' : '400px',
         }}
       >
         <Formik
           onSubmit={handleSubmit}
           initialValues={initialValues}
           validationSchema={validationSchema}
-          validateOnBlur={false}
-          validateOnChange={false}
+          validateOnBlur={isError}
+          validateOnChange={isError}
         >
           {({
             values,
@@ -134,23 +127,25 @@ const Login: FC = () => {
                       (touched.password && errors.password) ||
                       ' '}
                   </FormHelperText>
-                  <Button
+                  <LoadingButton
                     type="submit"
                     variant="contained"
-                    size={isLesserThamMd ? 'large' : 'medium'}
+                    size={isLesserThanMd ? 'large' : 'medium'}
+                    disabled={Boolean(!values.email || !values.password)}
+                    loading={isLoading}
                     sx={{
                       textTransform: 'unset',
                     }}
                     fullWidth
                   >
                     Увійти
-                  </Button>
+                  </LoadingButton>
                 </Box>
                 <Divider sx={{ padding: '15px 0' }}>або</Divider>
                 <Box mb="15px">
                   <Button
                     variant="outlined"
-                    size={isLesserThamMd ? 'large' : 'medium'}
+                    size={isLesserThanMd ? 'large' : 'medium'}
                     startIcon={<GoogleIcon />}
                     sx={{ textTransform: 'unset' }}
                     onClick={() => googleAuth()}
@@ -164,7 +159,7 @@ const Login: FC = () => {
                   <Link to="/registration">Зареєструватись</Link>
                 </Typography>
                 <Typography textAlign="center" fontSize="small">
-                  <Link to="/account/password/reset/request">
+                  <Link to="/account/request-reset-password">
                     Забули пароь?
                   </Link>
                 </Typography>

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   FailedResponse,
   PasswordUpdationArgs,
@@ -14,32 +13,38 @@ import { showAlert } from '../../redux/slices/alert'
 export const useUpdatePassword = () => {
   const dispatch = useAppDispatch()
 
-  const [updatePassword] = useUpdatePasswordMutation()
+  const [updatePassword, data] = useUpdatePasswordMutation()
 
-  return async (
-    args: PasswordUpdationArgs,
-    actions: FormikHelpers<PasswordUpdationArgs>
-  ) => {
-    try {
-      await updatePassword(args).unwrap()
+  return [
+    async (
+      args: PasswordUpdationArgs,
+      actions: FormikHelpers<PasswordUpdationArgs>
+    ) => {
+      try {
+        await updatePassword(args).unwrap()
 
-      dispatch(showAlert({ text: 'Пароль змінено', type: 'success' }))
-    } catch (e: any) {
-      if (e.status === 400) {
-        const errors = (e as FailedResponse<ValidationError>).data.errors
+        dispatch(showAlert({ text: 'Пароль змінено', type: 'success' }))
+      } catch (e: any) {
+        if (e.status === 400) {
+          const errors = (e as FailedResponse<ValidationError>).data.errors
 
-        actions.setErrors(errors)
+          actions.setErrors(errors)
+        }
       }
-    }
-  }
+    },
+    data,
+  ] as const
 }
 
 export const useUpdateSettings = () => {
-  const [updateSettings] = useUpdateSettingsMutation()
+  const [updateSettings, data] = useUpdateSettingsMutation()
 
-  return async (args: SettingsRequestBody) => {
-    try {
-      await updateSettings(args).unwrap()
-    } catch (e) {}
-  }
+  return [
+    async (args: SettingsRequestBody) => {
+      try {
+        await updateSettings(args).unwrap()
+      } catch (e) {}
+    },
+    data,
+  ] as const
 }

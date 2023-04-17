@@ -1,18 +1,17 @@
 import Box from '@mui/material/Box'
 import { FC } from 'react'
 import SettingsItemHeader from './SettingsItemHeader'
-import Button from '@mui/material/Button'
 import useTheme from '@mui/material/styles/useTheme'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import useLogout from '../../hooks/useLogout'
 import PasswordSettings from './PasswordSettings'
+import Logout from './Logout'
+import { useGetMeQuery } from '../../api/userApiSlice'
+import Typography from '@mui/material/Typography'
+import { Link } from 'react-router-dom'
 
 const AccountSettings: FC = () => {
-  const { breakpoints } = useTheme()
+  const { palette } = useTheme()
 
-  const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
-
-  const logout = useLogout()
+  const { data } = useGetMeQuery()
 
   return (
     <Box>
@@ -21,9 +20,25 @@ const AccountSettings: FC = () => {
           subtitle={'Змініть пароль, якщо вважаєте його ненадійним'}
           sx={{ mb: '20px' }}
         >
-          Зміна паролю
+          Зміна пароля
         </SettingsItemHeader>
-        <PasswordSettings />
+        {data?.registeredWithGoogle ? (
+          <Typography
+            fontSize="small"
+            color={
+              palette.mode === 'light' ? palette.grey[500] : palette.grey[600]
+            }
+          >
+            Ви були зареєстровані з допомогою Google і ще не встановили пароль.
+            Щоб встановити пароль, скористайтесь{' '}
+            <Link to="/account/request-reset-password">
+              зміною пароля по емейл
+            </Link>
+            .
+          </Typography>
+        ) : (
+          <PasswordSettings />
+        )}
       </Box>
       <Box>
         <SettingsItemHeader
@@ -34,17 +49,7 @@ const AccountSettings: FC = () => {
         >
           Вихід з аккаунту
         </SettingsItemHeader>
-        <Button
-          variant="contained"
-          size={isLesserThanMd ? 'large' : 'medium'}
-          sx={{
-            textTransform: 'unset',
-          }}
-          onClick={logout}
-          fullWidth
-        >
-          Вийти
-        </Button>
+        <Logout />
       </Box>
     </Box>
   )

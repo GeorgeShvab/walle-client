@@ -20,7 +20,7 @@ const NewDocument: FC = () => {
 
   const navigate = useNavigate()
 
-  const [createDocument, status] = useCreateDocument()
+  const [createDocument, { isError }] = useCreateDocument()
 
   useEffect(() => {
     const tabId = generateId()
@@ -58,7 +58,7 @@ const NewDocument: FC = () => {
             transform: 'translate(-50%, -50%)',
           }}
         />
-        {status.error && (
+        {isError && (
           <Error
             sx={{
               position: 'absolute',

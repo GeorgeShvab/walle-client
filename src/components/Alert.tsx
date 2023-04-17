@@ -18,19 +18,12 @@ const Alert: FC<Props> = ({
   open,
   onClose,
 }) => {
-  const [state, setState] = useState(open)
-
-  useEffect(() => {
-    setState(open)
-  }, [open])
-
   return (
     <Portal>
       <Snackbar
-        open={state}
+        open={open}
         autoHideDuration={duration}
         onClose={() => {
-          setState(false)
           onClose && onClose()
         }}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

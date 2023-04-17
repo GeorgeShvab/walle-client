@@ -43,10 +43,10 @@ const Router: FC = () => {
         }
       />
       <Route
-        path="/account/password/reset/request"
+        path="/account/request-reset-password"
         element={<RequestResetPassword />}
       />
-      <Route path="/account/password/reset" element={<ResetPassword />} />
+      <Route path="/account/reset-password" element={<ResetPassword />} />
       <Route
         path="/home"
         element={

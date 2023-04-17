@@ -6,9 +6,8 @@ import ActionsBarWrapper from './ActionsBarWrapper'
 import { Link } from 'react-router-dom'
 import { SxProps } from '@mui/material/styles'
 import Settings from '../Settings/Settings'
-import { useAppSelector } from '../../redux/store'
-import { selectUser } from '../../redux/slices/user'
 import { useGetMeQuery } from '../../api/userApiSlice'
+import PersonIcon from '@mui/icons-material/Person'
 
 const ToolBarLeftActions: FC<{ sx?: SxProps }> = ({ sx }) => {
   const [settinsgOpen, setSettingsOpen] = useState<boolean>(false)
@@ -22,10 +21,16 @@ const ToolBarLeftActions: FC<{ sx?: SxProps }> = ({ sx }) => {
   return (
     <ActionsBarWrapper sx={sx}>
       <>
-        {data && (
+        {data ? (
           <Link to="/home">
             <IconButton size="small">
               <HomeIcon />
+            </IconButton>
+          </Link>
+        ) : (
+          <Link to="/login">
+            <IconButton size="small">
+              <PersonIcon />
             </IconButton>
           </Link>
         )}

@@ -10,22 +10,25 @@ import { FormikHelpers } from 'formik'
 const useRegistration = () => {
   const navigate = useNavigate()
 
-  const [register] = useRegistrationMutation()
+  const [register, data] = useRegistrationMutation()
 
-  return async (
-    args: RegistrationArgs,
-    actions: FormikHelpers<RegistrationArgs>
-  ) => {
-    try {
-      const data = await register(args).unwrap()
+  return [
+    async (
+      args: RegistrationArgs,
+      actions: FormikHelpers<RegistrationArgs>
+    ) => {
+      try {
+        await register(args).unwrap()
 
-      navigate('/registration/success')
-    } catch (e: any) {
-      if (e.status === 400) {
-        actions.setErrors((e as FailedResponse<ValidationError>).data.errors)
+        navigate('/registration/success')
+      } catch (e: any) {
+        if (e.status === 400) {
+          actions.setErrors((e as FailedResponse<ValidationError>).data.errors)
+        }
       }
-    }
-  }
+    },
+    data,
+  ] as const
 }
 
 export default useRegistration

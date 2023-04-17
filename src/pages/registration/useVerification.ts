@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useVerifyMutation } from '../../api/authApiSlice'
 import { useLazyGetMeQuery } from '../../api/userApiSlice'
 import asyncLocalStorageSet from '../../utils/asyncLocalStorageSet'
-import apiSlice from '../../api/apiSlice'
+import { FailedResponse } from '../../../types'
 
 const useVerification = (token: string | null) => {
   const [verify] = useVerifyMutation()
@@ -21,8 +21,6 @@ const useVerification = (token: string | null) => {
         try {
           const data = await verify(token).unwrap()
 
-          apiSlice.util.invalidateTags(['Document', 'Documents'])
-
           await Promise.all([
             (asyncLocalStorageSet('AccessToken', data.accessToken),
             asyncLocalStorageSet('RefreshToken', data.refreshToken)),
@@ -35,11 +33,7 @@ const useVerification = (token: string | null) => {
           setSuccess(true)
         } catch (e: any) {
           if (e.status === 400) {
-            setError('Час дії токену вичерпався або токен невірний')
-          } else if (e.status === 500) {
-            setError('Помилка серверу ')
-          } else {
-            setError("Помилка з'єднання")
+            setError((e as FailedResponse<{ msg: 'string' }>).data.msg)
           }
         }
       })()

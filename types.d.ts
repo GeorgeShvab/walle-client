@@ -13,6 +13,7 @@ export interface User {
   mode: Mode
   color: sring
   font: Font
+  registeredWithGoogle: boolean
 }
 
 export interface RegistrationArgs {
@@ -41,6 +42,7 @@ export interface ValidationError {
     email?: string
     password?: string
     name?: string
+    [key: string]: string
   }
 }
 

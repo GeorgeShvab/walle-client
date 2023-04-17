@@ -6,39 +6,29 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { FC, useEffect } from 'react'
-import { Document } from '../../../types'
 import { useDeleteDocument } from '../../hooks/useDocument'
 import CircularProgress from '@mui/material/CircularProgress'
+import { DialogPropsType } from '../../../types'
 
-interface PropsTypes extends Document {
-  open: boolean
-  onClose: () => void
-  onAction?: (arg: string) => void
-}
-
-const DeleteDocument: FC<PropsTypes> = ({
+const DeleteDocument: FC<DialogPropsType> = ({
   open,
   onClose,
   title,
   id,
   type,
-  onAction,
 }) => {
-  const [deleteDocument, status] = useDeleteDocument()
+  const [deleteDocument, { isLoading, isSuccess, isError }] =
+    useDeleteDocument()
 
   useEffect(() => {
-    if (status.error || status.success) {
+    if (isError || isSuccess) {
       onClose()
     }
-  }, [status])
+  }, [isError, isSuccess, isLoading])
 
   const handleDelete = () => {
     deleteDocument(id)
   }
-
-  useEffect(() => {
-    if (status.success) onAction && onAction(id)
-  }, [status.success])
 
   return (
     <Dialog
@@ -56,7 +46,7 @@ const DeleteDocument: FC<PropsTypes> = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        {status.isLoading ? (
+        {isLoading ? (
           <Box display="flex" justifyContent="center" width="100%">
             <Box sx={{ transform: 'translateY(-10px)' }}>
               <CircularProgress />

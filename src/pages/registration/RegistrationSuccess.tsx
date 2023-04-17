@@ -8,20 +8,23 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { Link } from 'react-router-dom'
 import CenterContentPageWrapper from '../../components/CenterContentPageWrapper'
+import useTitle from '../../hooks/useTitle'
 
 const RegistrationSuccess: FC = () => {
   const { palette, breakpoints } = useTheme()
 
-  const isLesserThamMd = useMediaQuery(breakpoints.down('md'))
+  const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
+
+  useTitle('Реєстрація')
 
   return (
     <CenterContentPageWrapper>
       <Paper
         elevation={2}
         sx={{
-          padding: isLesserThamMd ? '35px 30px' : '35px 40px',
+          padding: isLesserThanMd ? '35px 30px' : '35px 40px',
           width: '100%',
-          maxWidth: isLesserThamMd ? '100%' : '400px',
+          maxWidth: isLesserThanMd ? '100%' : '400px',
         }}
       >
         <Box>

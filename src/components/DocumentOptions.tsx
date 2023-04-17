@@ -6,33 +6,48 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
 import LockIcon from '@mui/icons-material/Lock'
-import { Document } from '../../types'
 import DeleteDocument from './Dialogs/DeleteDocument'
 import ChangeDocumentAccess from './Dialogs/ChangeDocumentAccess'
 import RenameDocument from './Dialogs/RenameDocument'
 import ChangeDocumentType from './Dialogs/ChangeDocumentType'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
+import { useGetDocumentQuery } from '../api/documentApiSlice'
+import { useDownload } from '../hooks/useDocument'
+import InsertLinkIcon from '@mui/icons-material/InsertLink'
+import DownloadIcon from '@mui/icons-material/Download'
+import { useGetMeQuery } from '../api/userApiSlice'
 
-interface PropsType extends Document {
+interface PropsType {
   onClose: () => void
   anchor: RefObject<HTMLElement>
   open: boolean
-  onDelete?: (arg: string) => void
-  onRename?: (arg: string) => void
-  onChangeAccess?: (arg: string) => void
-  onChangeType?: (arg: string) => void
+  id: string
 }
 
 type Action = 'delete' | 'rename' | 'change_type' | 'change_access'
 
-const DocumentOptions: FC<PropsType> = (props) => {
-  const { anchor, onClose, open, ...document } = props
+const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
+  const { data } = useGetDocumentQuery(id)
+
+  const { data: user } = useGetMeQuery()
 
   const [action, setAction] = useState<Action | undefined>(undefined)
 
-  const handleClose = () => {
-    setAction(undefined)
+  const handleClose = () => setAction(undefined)
+
+  const download = useDownload(data)
+
+  const handleDownload = () => {
+    handleClose()
+    onClose()
+    download()
+  }
+
+  const handleCopyClick = () => {
+    handleClose()
+    onClose()
+    navigator?.clipboard?.writeText(document.location.href)
   }
 
   const handleClick = (actionType: Action) => {
@@ -42,30 +57,34 @@ const DocumentOptions: FC<PropsType> = (props) => {
 
   return (
     <>
-      <DeleteDocument
-        open={action === 'delete'}
-        onClose={handleClose}
-        onAction={props.onDelete}
-        {...document}
-      />
-      <ChangeDocumentAccess
-        open={action === 'change_access'}
-        onClose={handleClose}
-        onAction={props.onChangeAccess}
-        {...document}
-      />
-      <RenameDocument
-        open={action === 'rename'}
-        onClose={handleClose}
-        onAction={props.onRename}
-        {...document}
-      />
-      <ChangeDocumentType
-        open={action === 'change_type'}
-        onClose={handleClose}
-        onAction={props.onChangeType}
-        {...document}
-      />
+      {data && (
+        <>
+          <DeleteDocument
+            open={action === 'delete'}
+            onClose={handleClose}
+            key={data.id}
+            {...data}
+          />
+          <ChangeDocumentAccess
+            open={action === 'change_access'}
+            onClose={handleClose}
+            key={data.access}
+            {...data}
+          />
+          <RenameDocument
+            open={action === 'rename'}
+            onClose={handleClose}
+            key={data.title}
+            {...data}
+          />
+          <ChangeDocumentType
+            open={action === 'change_type'}
+            onClose={handleClose}
+            key={data.type}
+            {...data}
+          />
+        </>
+      )}
       <Menu
         id="lock-menu"
         anchorEl={anchor.current}
@@ -77,29 +96,45 @@ const DocumentOptions: FC<PropsType> = (props) => {
         }}
       >
         <MenuList>
-          <MenuItem onClick={() => handleClick('rename')}>
+          {data &&
+            data.owner === user?.id && [
+              //Simple array here becouse MenuList dosen't except Fragment as Child (error)
+              <MenuItem onClick={() => handleClick('rename')}>
+                <ListItemIcon>
+                  <EditIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Перейменувати</ListItemText>
+              </MenuItem>,
+              <MenuItem onClick={() => handleClick('change_type')}>
+                <ListItemIcon>
+                  <DriveFileRenameOutlineIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Змінити розширення</ListItemText>
+              </MenuItem>,
+              <MenuItem onClick={() => handleClick('delete')}>
+                <ListItemIcon>
+                  <DeleteIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Видалити</ListItemText>
+              </MenuItem>,
+              <MenuItem onClick={() => handleClick('change_access')}>
+                <ListItemIcon>
+                  <LockIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Налаштування доступу</ListItemText>
+              </MenuItem>,
+            ]}
+          <MenuItem onClick={handleDownload}>
             <ListItemIcon>
-              <EditIcon fontSize="small" />
+              <DownloadIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Перейменувати</ListItemText>
+            <ListItemText>Завантажити документ</ListItemText>
           </MenuItem>
-          <MenuItem onClick={() => handleClick('change_type')}>
+          <MenuItem onClick={handleCopyClick}>
             <ListItemIcon>
-              <DriveFileRenameOutlineIcon fontSize="small" />
+              <InsertLinkIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Змінити розширення</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={() => handleClick('delete')}>
-            <ListItemIcon>
-              <DeleteIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Видалити</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={() => handleClick('change_access')}>
-            <ListItemIcon>
-              <LockIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Налаштування доступу</ListItemText>
+            <ListItemText>Скопіювати посилання</ListItemText>
           </MenuItem>
         </MenuList>
       </Menu>

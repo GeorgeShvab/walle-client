@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import useTheme from '@mui/material/styles/useTheme'
-import { FC, UIEvent, useEffect, useState } from 'react'
+import { FC, UIEvent, useState } from 'react'
 import Tabs from './Tabs'
 import ToolBarLeftActions from '../ToolBar/ToolBarLeftActions'
 import Drawer from '@mui/material/Drawer'

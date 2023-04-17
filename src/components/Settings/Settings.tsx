@@ -13,8 +13,6 @@ import SettingsMenu from './SettingsMenu'
 import AccountSettings from './AccountSettings'
 import InterfaceSettings from './InterfaceSettings'
 import CloseIcon from '@mui/icons-material/Close'
-import { useAppSelector } from '../../redux/store'
-import { selectUser } from '../../redux/slices/user'
 import Info from './Info'
 import { useGetMeQuery } from '../../api/userApiSlice'
 

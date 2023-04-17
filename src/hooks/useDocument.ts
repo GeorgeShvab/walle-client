@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   useCreateDocumentMutation,
   useDeleteDocumentMutation,
@@ -8,6 +7,7 @@ import {
 import { showAlert } from '../redux/slices/alert'
 import { useAppDispatch } from '../redux/store'
 import {
+  Document,
   DocumentTextUpdationRequestBody,
   DocumentUpdationRequestBody,
   FailedResponse,
@@ -17,12 +17,7 @@ import { FormikHelpers } from 'formik'
 import usePage from './usePage'
 import { closeTab } from '../redux/slices/tabs'
 import { useNavigate } from 'react-router-dom'
-
-interface Status {
-  error: boolean
-  success: boolean
-  isLoading: boolean
-}
+import { EditorState, RawDraftContentState, convertFromRaw } from 'draft-js'
 
 export const useDeleteDocument = () => {
   const dispatch = useAppDispatch()
@@ -31,23 +26,11 @@ export const useDeleteDocument = () => {
 
   const navigate = useNavigate()
 
-  const [status, setStatus] = useState<Status>({
-    error: false,
-    success: false,
-    isLoading: false,
-  })
-
-  const [deleteDoc] = useDeleteDocumentMutation()
+  const [deleteDoc, data] = useDeleteDocumentMutation()
 
   return [
     async (id: string) => {
       try {
-        setStatus({
-          error: false,
-          success: false,
-          isLoading: true,
-        })
-
         await deleteDoc(id).unwrap()
 
         if (id === docId) {
@@ -55,55 +38,25 @@ export const useDeleteDocument = () => {
         }
 
         dispatch(closeTab(id))
-
-        setStatus({
-          error: false,
-          success: true,
-          isLoading: false,
-        })
       } catch (e: any) {
         if (e.status !== 500 && e.status !== 'FETCH_ERROR') {
           dispatch(showAlert('Помилка при видаленні документа'))
         }
-
-        setStatus({
-          error: true,
-          success: false,
-          isLoading: false,
-        })
       }
     },
-    status,
+    data,
   ] as const
 }
 
 export const useUpdateDocument = () => {
   const dispatch = useAppDispatch()
 
-  const [status, setStatus] = useState<Status>({
-    error: false,
-    success: false,
-    isLoading: false,
-  })
-
-  const [updateDoc] = useUpdateDocumentMutation()
+  const [updateDoc, data] = useUpdateDocumentMutation()
 
   return [
     async (body: DocumentUpdationRequestBody, actions?: FormikHelpers<any>) => {
       try {
-        setStatus({
-          error: false,
-          success: false,
-          isLoading: true,
-        })
-
         await updateDoc(body).unwrap()
-
-        setStatus({
-          error: false,
-          success: true,
-          isLoading: false,
-        })
       } catch (e: any) {
         if (e.status !== 500 && e.status !== 'FETCH_ERROR') {
           dispatch(showAlert('Помилка при оновленні документа'))
@@ -114,45 +67,21 @@ export const useUpdateDocument = () => {
 
           actions && actions.setErrors(errors)
         }
-
-        setStatus({
-          error: true,
-          success: false,
-          isLoading: false,
-        })
       }
     },
-    status,
+    data,
   ] as const
 }
 
 export const useUpdateDocumentText = () => {
   const dispatch = useAppDispatch()
 
-  const [status, setStatus] = useState<Status>({
-    error: false,
-    success: false,
-    isLoading: false,
-  })
-
-  const [updateDoc] = useUpdateDocumentTextMutation()
+  const [updateDoc, data] = useUpdateDocumentTextMutation()
 
   return [
     async (body: DocumentTextUpdationRequestBody) => {
       try {
-        setStatus({
-          error: false,
-          success: false,
-          isLoading: true,
-        })
-
         await updateDoc(body).unwrap()
-
-        setStatus({
-          error: false,
-          success: true,
-          isLoading: false,
-        })
       } catch (e: any) {
         if (e.status !== 500 && e.status !== 'FETCH_ERROR') {
           dispatch(showAlert('Помилка при оновленні документа'))
@@ -161,59 +90,58 @@ export const useUpdateDocumentText = () => {
         if (e.status === 400) {
           const errors = (e as FailedResponse<ValidationError>).data.errors
         }
-
-        setStatus({
-          error: true,
-          success: false,
-          isLoading: false,
-        })
       }
     },
-    status,
+    data,
   ] as const
 }
 
 export const useCreateDocument = () => {
   const dispatch = useAppDispatch()
 
-  const [status, setStatus] = useState<Status>({
-    error: false,
-    success: false,
-    isLoading: false,
-  })
-
-  const [createDoc] = useCreateDocumentMutation()
+  const [createDoc, data] = useCreateDocumentMutation()
 
   return [
     async () => {
       try {
-        setStatus({
-          error: false,
-          success: false,
-          isLoading: true,
-        })
-
         const data = await createDoc().unwrap()
-
-        setStatus({
-          error: false,
-          success: true,
-          isLoading: false,
-        })
 
         return data
       } catch (e: any) {
         if (e.status !== 500 && e.status !== 'FETCH_ERROR') {
           dispatch(showAlert('Помилка при створенні документа'))
         }
-
-        setStatus({
-          error: true,
-          success: false,
-          isLoading: false,
-        })
       }
     },
-    status,
+    data,
   ] as const
+}
+
+export const useDownload = (doc: Document | undefined) => {
+  const dispatch = useAppDispatch()
+
+  return async () => {
+    if (!doc) return
+
+    try {
+      const rawText = EditorState.createWithContent(
+        convertFromRaw(JSON.parse(doc.text) as RawDraftContentState)
+      )
+        .getCurrentContent()
+        .getPlainText()
+
+      const url = `data:text/${doc.type};base64,${btoa(
+        unescape(encodeURIComponent(rawText))
+      )}`
+      const a = document.createElement('a')
+      a.style.display = 'none'
+      a.href = url
+      a.download = `${doc.title}.${doc.type}`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    } catch (e) {
+      dispatch(showAlert('Помилка при завантаженні файлу'))
+    }
+  }
 }

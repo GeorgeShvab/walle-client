@@ -9,6 +9,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
 import useVerification from './useVerification'
 import CenterContentPageWrapper from '../../components/CenterContentPageWrapper'
+import useTitle from '../../hooks/useTitle'
 
 const Verification: FC = () => {
   const { palette, breakpoints } = useTheme()
@@ -33,6 +34,8 @@ const Verification: FC = () => {
       }, 10000)
     }
   }, [success])
+
+  useTitle('Верифікація')
 
   return (
     <CenterContentPageWrapper>

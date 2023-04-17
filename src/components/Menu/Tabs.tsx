@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { FC, memo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import usePage from '../../hooks/usePage'
