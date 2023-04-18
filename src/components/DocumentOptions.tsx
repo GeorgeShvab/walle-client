@@ -1,7 +1,7 @@
 import MenuList from '@mui/material/MenuList'
 import Menu from '@mui/material/Menu'
 import ListItemText from '@mui/material/ListItemText'
-import { FC, RefObject, useState } from 'react'
+import { FC, RefObject, useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
@@ -12,11 +12,16 @@ import RenameDocument from './Dialogs/RenameDocument'
 import ChangeDocumentType from './Dialogs/ChangeDocumentType'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import { useGetDocumentQuery } from '../api/documentApiSlice'
-import { useDownload } from '../hooks/useDocument'
+import {
+  useGetDocumentQuery,
+  useLazyGetDocumentQuery,
+} from '../api/documentApiSlice'
+import { useCopyDocumentLink, useDownload } from '../hooks/useDocument'
 import InsertLinkIcon from '@mui/icons-material/InsertLink'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useGetMeQuery } from '../api/userApiSlice'
+import { useAppDispatch } from '../redux/store'
+import { showAlert } from '../redux/slices/alert'
 
 interface PropsType {
   onClose: () => void
@@ -28,7 +33,9 @@ interface PropsType {
 type Action = 'delete' | 'rename' | 'change_type' | 'change_access'
 
 const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
-  const { data } = useGetDocumentQuery(id)
+  const dispatch = useAppDispatch()
+
+  const [trigger, { data }] = useLazyGetDocumentQuery()
 
   const { data: user } = useGetMeQuery()
 
@@ -37,6 +44,14 @@ const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
   const handleClose = () => setAction(undefined)
 
   const download = useDownload(data)
+
+  const copy = useCopyDocumentLink(id)
+
+  useEffect(() => {
+    if (open) {
+      trigger(id)
+    }
+  }, [open, id])
 
   const handleDownload = () => {
     handleClose()
@@ -47,7 +62,7 @@ const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
   const handleCopyClick = () => {
     handleClose()
     onClose()
-    navigator?.clipboard?.writeText(document.location.href)
+    copy()
   }
 
   const handleClick = (actionType: Action) => {
@@ -95,7 +110,22 @@ const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
           role: 'listbox',
         }}
       >
-        {data && data.owner === user?.id ? (
+        {data?.owner !== user?.id ? (
+          <MenuList>
+            <MenuItem onClick={handleDownload}>
+              <ListItemIcon>
+                <DownloadIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Завантажити документ</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleCopyClick}>
+              <ListItemIcon>
+                <InsertLinkIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Скопіювати посилання</ListItemText>
+            </MenuItem>
+          </MenuList>
+        ) : (
           <MenuList>
             <MenuItem onClick={() => handleClick('rename')}>
               <ListItemIcon>
@@ -121,21 +151,6 @@ const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
               </ListItemIcon>
               <ListItemText>Налаштування доступу</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleDownload}>
-              <ListItemIcon>
-                <DownloadIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Завантажити документ</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleCopyClick}>
-              <ListItemIcon>
-                <InsertLinkIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Скопіювати посилання</ListItemText>
-            </MenuItem>
-          </MenuList>
-        ) : (
-          <MenuList>
             <MenuItem onClick={handleDownload}>
               <ListItemIcon>
                 <DownloadIcon fontSize="small" />

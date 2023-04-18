@@ -33,6 +33,8 @@ export const useDeleteDocument = () => {
       try {
         await deleteDoc(id).unwrap()
 
+        dispatch(showAlert({ text: 'Документ видалено', type: 'success' }))
+
         if (id === docId) {
           navigate('/home')
         }
@@ -57,6 +59,8 @@ export const useUpdateDocument = () => {
     async (body: DocumentUpdationRequestBody, actions?: FormikHelpers<any>) => {
       try {
         await updateDoc(body).unwrap()
+
+        dispatch(showAlert({ text: 'Документ оновлено', type: 'success' }))
       } catch (e: any) {
         if (e.status !== 500 && e.status !== 'FETCH_ERROR') {
           dispatch(showAlert('Помилка при оновленні документа'))
@@ -143,5 +147,16 @@ export const useDownload = (doc: Document | undefined) => {
     } catch (e) {
       dispatch(showAlert('Помилка при завантаженні файлу'))
     }
+  }
+}
+
+export const useCopyDocumentLink = (id: string) => {
+  const dispatch = useAppDispatch()
+
+  return () => {
+    try {
+      navigator.clipboard.writeText(document.location.href)
+      dispatch(showAlert({ text: 'Посилання скопійовано', type: 'success' }))
+    } catch (e) {}
   }
 }

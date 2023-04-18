@@ -28,8 +28,6 @@ const Document: FC = () => {
 
   useTitle(data?.title || 'WallE')
 
-  // used key here because of some bug when setting new state with useEffect. Linkify plugin stops working when I use useEffect
-
   if (error) {
     const title: string =
       typeof (error as any)?.status === 'number'
@@ -68,9 +66,9 @@ const Document: FC = () => {
     )
   }
 
-  return (
-    <Box component="main">
-      {isLoading && !data ? (
+  if ((isLoading && id !== (data as any)?.id) || !data) {
+    return (
+      <Box component="main">
         <Box
           padding={isLesserThanMd ? '15px 15px' : '25px'}
           height={`calc(var(--screenHeight) - ${
@@ -87,16 +85,18 @@ const Document: FC = () => {
             }}
           />
         </Box>
-      ) : (
-        data && (
-          <TextEditor
-            {...data}
-            isLoading={isLoading}
-            key={data.id}
-            currentUser={user?.id}
-          />
-        )
-      )}
+      </Box>
+    )
+  }
+
+  return (
+    <Box component="main">
+      <TextEditor
+        {...data}
+        isLoading={isLoading}
+        key={data.id} // used key here because of some bug when setting new state with useEffect. Linkify plugin stops working when I use useEffect
+        currentUser={user?.id}
+      />
     </Box>
   )
 }
