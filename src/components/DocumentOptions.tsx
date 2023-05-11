@@ -22,6 +22,7 @@ import DownloadIcon from '@mui/icons-material/Download'
 import { useGetMeQuery } from '../api/userApiSlice'
 import { useAppDispatch } from '../redux/store'
 import { showAlert } from '../redux/slices/alert'
+import { Document } from '../../types'
 
 interface PropsType {
   onClose: () => void
@@ -32,10 +33,8 @@ interface PropsType {
 
 type Action = 'delete' | 'rename' | 'change_type' | 'change_access'
 
-const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
-  const dispatch = useAppDispatch()
-
-  const [trigger, { data }] = useLazyGetDocumentQuery()
+const DocumentOptions: FC<PropsType & Document> = (props) => {
+  const { anchor, onClose, open, ...data } = props
 
   const { data: user } = useGetMeQuery()
 
@@ -43,15 +42,9 @@ const DocumentOptions: FC<PropsType> = ({ anchor, onClose, open, id }) => {
 
   const handleClose = () => setAction(undefined)
 
-  const download = useDownload(data)
+  const download = useDownload(props)
 
-  const copy = useCopyDocumentLink(id)
-
-  useEffect(() => {
-    if (open) {
-      trigger(id)
-    }
-  }, [open, id])
+  const copy = useCopyDocumentLink(data.id)
 
   const handleDownload = () => {
     handleClose()

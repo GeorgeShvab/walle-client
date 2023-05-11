@@ -9,7 +9,9 @@ import DocumentIcon from './DocumentIcon'
 import { Link } from 'react-router-dom'
 import DocumentOptions from '../../components/DocumentOptions'
 
-const Document: FC<types.Document> = ({ title, type, id }) => {
+const Document: FC<types.Document> = (props) => {
+  const { title, type, id } = props
+
   const { palette, breakpoints } = useTheme()
 
   const isLesserThanMd = useMediaQuery(breakpoints.down('md'))
@@ -106,7 +108,7 @@ const Document: FC<types.Document> = ({ title, type, id }) => {
               open={showMenu}
               onClose={toggleContextMenu}
               anchor={containerRef}
-              id={id}
+              {...props}
             />
           </Box>
         </Paper>

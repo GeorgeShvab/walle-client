@@ -84,7 +84,7 @@ const ToolBarRightActions: FC = () => {
             anchor={moreIconRef}
             open={showMenu}
             onClose={() => setShowMenu(false)}
-            id={data.id}
+            {...data}
           />
         </Box>
       </>
