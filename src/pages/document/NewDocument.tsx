@@ -45,19 +45,19 @@ const NewDocument: FC = () => {
     <Box component="main">
       <Box
         padding={isLesserThanMd ? '15px 15px' : '25px'}
-        height={`calc(var(--screenHeight) - ${
-          isLesserThanMd ? '30px' : '50px'
-        })`}
+        height={`calc(var(--screenHeight) - ${isLesserThanMd ? '30px' : '50px'})`}
         position="relative"
       >
-        <CircularProgress
+        <Box
           sx={{
             position: 'absolute',
             left: '50%',
             top: '50%',
             transform: 'translate(-50%, -50%)',
           }}
-        />
+        >
+          <CircularProgress />
+        </Box>
         {isError && (
           <Error
             sx={{

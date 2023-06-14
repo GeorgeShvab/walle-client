@@ -61,20 +61,17 @@ const Home: FC = () => {
   return (
     <Box component="main" overflow="hidden">
       {isLoading && !data ? (
-        <Box
-          height={`calc(var(--screenHeight) - ${
-            isLesserThanMd ? '30px' : '50px'
-          })`}
-          position="relative"
-        >
-          <CircularProgress
+        <Box height={`calc(var(--screenHeight) - ${isLesserThanMd ? '30px' : '50px'})`} position="relative">
+          <Box
             sx={{
               position: 'absolute',
               left: '50%',
               top: '50%',
               transform: 'translate(-50%, -50%)',
             }}
-          />
+          >
+            <CircularProgress />
+          </Box>
         </Box>
       ) : (
         <Box>
